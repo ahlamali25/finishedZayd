@@ -1,25 +1,68 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@extends('layouts.app')
+
+@section('title', 'نسيت كلمة المرور')
+
+@section('content')
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+
+                    <!-- الصورة -->
+                    <div class="col-md-6 d-none d-md-block p-0">
+                        <img src="{{ asset('img/child1.jpeg') }}"
+                             class="img-fluid w-100 h-100"
+                             style="object-fit: cover;">
+                    </div>
+
+                    <!-- الفورم -->
+                    <div class="col-md-6 p-5" dir="rtl">
+                        <h3 class="mb-4 text-center">إعادة تعيين كلمة المرور</h3>
+
+                        @if (session('status'))
+                            <div class="alert alert-success text-center">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('password.email') }}">
+                            @csrf
+
+                            <div class="mb-4">
+                                <label class="form-label">البريد الإلكتروني</label>
+                                <input type="email"
+                                       name="email"
+                                       class="form-control"
+                                       placeholder="example@email.com"
+                                       value="{{ old('email') }}"
+                                       required>
+                                @error('email')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <button class="btn btn-primary py-2">
+                                    إرسال رابط إعادة التعيين
+                                </button>
+                            </div>
+
+                            <div class="text-center">
+                                <a href="{{ route('login') }}"
+                                   class="text-decoration-none fw-bold"
+                                   style="color:#031f3d">
+                                    العودة لتسجيل الدخول
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</div>
+@endsection

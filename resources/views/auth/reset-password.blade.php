@@ -1,39 +1,96 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+@extends('layouts.app')
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@section('title', 'إعادة تعيين كلمة المرور')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+
+                    <!-- العمود الأيسر (الصورة) -->
+                    <div class="col-md-6 d-none d-md-block p-0">
+                        <img src="{{ asset('img/set.jpeg') }}"
+                             alt="reset password image"
+                             class="img-fluid w-100 h-100"
+                             style="object-fit: cover;">
+                    </div>
+
+                    <!-- العمود الأيمن (الفورم) -->
+                    <div class="col-md-6 p-5" dir="rtl">
+                        <h3 class="mb-4 text-center">إعادة تعيين كلمة المرور</h3>
+
+                        <form method="POST" action="{{ route('password.store') }}">
+                            @csrf
+
+                            <!-- Token -->
+                            <input type="hidden" name="token" value="{{ request()->route('token') }}">
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label class="form-label">البريد الإلكتروني</label>
+                                <input type="email"
+                                       name="email"
+                                       class="form-control"
+                                       value="{{ old('email', request('email')) }}"
+                                       required autofocus>
+
+                                @error('email')
+                                    <div class="text-danger mt-1 small">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label class="form-label">كلمة المرور الجديدة</label>
+                                <input type="password"
+                                       name="password"
+                                       class="form-control"
+                                       required>
+
+                                @error('password')
+                                    <div class="text-danger mt-1 small">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="mb-4">
+                                <label class="form-label">تأكيد كلمة المرور</label>
+                                <input type="password"
+                                       name="password_confirmation"
+                                       class="form-control"
+                                       required>
+
+                                @error('password_confirmation')
+                                    <div class="text-danger mt-1 small">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Button -->
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary py-2">
+                                    إعادة تعيين كلمة المرور
+                                </button>
+                            </div>
+
+                            <!-- Back to login -->
+                            <div class="text-center">
+                                <a href="{{ route('login') }}"
+                                   class="fw-bold text-decoration-none"
+                                   style="color: #031f3d;">
+                                    العودة إلى تسجيل الدخول
+                                </a>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</div>
+@endsection

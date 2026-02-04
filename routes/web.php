@@ -36,6 +36,12 @@ Route::get('/student/dashboard',
     [DashboardController::class, 'index']
 )->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware('auth')
+    ->get('/student/my-courses', [DashboardController::class, 'myCourses'])
+    ->name('student.courses');
+
+
+
 Route::get('/courses/{course}', [CourseController::class, 'show'])
     ->name('courses.show');
 

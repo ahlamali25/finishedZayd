@@ -36,6 +36,7 @@ class RegisteredUserController extends Controller
        'phone' => 'required|string|max:20',
        'gender' => 'required|in:male,female',
        'age' => 'required|integer|min:1|max:120',
+       
         ]);
 
         $user = User::create([
@@ -45,6 +46,7 @@ class RegisteredUserController extends Controller
              'phone' => $request->phone,
              'gender' => $request->gender,
              'age' => $request->age,
+             'role_id' => 3, // Default role_id for regular users
 
         ]);
 

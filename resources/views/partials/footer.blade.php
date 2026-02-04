@@ -70,13 +70,13 @@
         <div class="col-lg-3 col-md-6 mb-5">
           <h3 class="text-primary mb-4">روابط سريعة</h3>
           <div class="d-flex flex-column justify-content-start">
-            <a class="text-white mb-2" href="#"
+            <a class="text-white mb-2" href="{{ route('home') }}"
               ><i class="fa fa-angle-right mr-2"></i>الرئيسية</a
             >
             <a class="text-white mb-2" href="#"
               ><i class="fa fa-angle-right mr-2"></i>عن المركز </a
             >
-            <a class="text-white mb-2" href="#"
+            <a class="text-white mb-2" href="{{ route('courses.index') }}"
               ><i class="fa fa-angle-right mr-2"></i>الدورات</a
             >
             <a class="text-white mb-2" href="#"
@@ -89,32 +89,42 @@
         </div>
         <div class="col-lg-3 col-md-6 mb-5">
           <h3 class="text-primary mb-4">تسجيل الدخول</h3>
-          <form action="">
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control border-0 py-4"
-                placeholder="اسمك"
-                required="required"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="email"
-                class="form-control border-0 py-4"
-                placeholder="البريد الإلكتروني"
-                required="required"
-              />
-            </div>
-            <div>
-              <button
-                class="btn btn-primary btn-block border-0 py-3"
-                type="submit"
-              >
-               تسجيل الدخول
-              </button>
-            </div>
-          </form>
+        <form action="{{ route('login') }}" method="POST">
+    @csrf
+
+    <!-- البريد الإلكتروني -->
+    <div class="form-group mb-3">
+        <input
+            type="email"
+            name="email"
+            class="form-control border-0 py-4"
+            placeholder="البريد الإلكتروني"
+            required
+        />
+    </div>
+
+    <!-- كلمة المرور -->
+    <div class="form-group mb-3">
+        <input
+            type="password"
+            name="password"
+            class="form-control border-0 py-4"
+            placeholder="كلمة المرور"
+            required
+        />
+    </div>
+
+    <!-- زر تسجيل الدخول -->
+    <div>
+        <button
+            class="btn btn-primary btn-block border-0 py-3"
+            type="submit"
+        >
+            تسجيل الدخول
+        </button>
+    </div>
+</form>
+
         </div>
       </div>
       <div

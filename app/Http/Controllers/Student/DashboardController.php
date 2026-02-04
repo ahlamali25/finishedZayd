@@ -19,4 +19,14 @@ class DashboardController extends Controller
 
 }
 
+public function myCourses()
+{
+    $user = auth()->user();
+    $courses = $user->courses ?? collect();
+
+    return view('student.my-courses', compact('courses'));
+}
+
+
+
 }

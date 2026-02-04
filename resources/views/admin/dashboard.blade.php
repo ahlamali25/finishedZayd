@@ -84,8 +84,10 @@
         <a href="{{ route('admin.dashboard') }}"
            class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <i class="bi bi-speedometer2"></i>
-            الرئيسية
+            لوحة التحكم
         </a>
+
+        
 
         <!-- Groups -->
         <a href="#"
@@ -99,6 +101,13 @@
            class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
             <i class="bi bi-people"></i>
             المستخدمون
+        </a>
+
+           <!-- home -->
+          <a href="{{ route('home') }}"
+           class="sidebar-link {{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="bi bi-house-door"></i>
+            الرئيسية
         </a>
 
         <!-- Logout -->

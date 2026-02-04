@@ -46,15 +46,47 @@
 <body>
 <div class="d-flex">
 
-    <!-- Sidebar -->
-    <div class="sidebar p-3">
-        <h5 class="mb-4"><i class="bi bi-person-badge"></i> لوحة المعلم</h5>
+<!-- Sidebar -->
+<div class="sidebar p-3">
+    <h5 class="mb-4">
+        <i class="bi bi-person-badge"></i> لوحة المعلم
+    </h5>
 
-        <a class="active"><i class="bi bi-speedometer2 me-2"></i> الرئيسية</a>
-        <a href="#"><i class="bi bi-book me-2"></i> كورساتي</a>
-        <a href="#"><i class="bi bi-people me-2"></i> حلقاتي</a>
-        <a href="{{ route('logout') }}"><i class="bi bi-box-arrow-right me-2"></i> تسجيل الخروج</a>
-    </div>
+    <!-- Dashboard -->
+    <a href="{{ route('teacher.dashboard') }}" class="active">
+        <i class="bi bi-speedometer2 me-2"></i>
+        لوحة التحكم
+    </a>
+
+    <!-- My Courses -->
+    <a href="#">
+        <i class="bi bi-book me-2"></i>
+        كورساتي
+    </a>
+
+    <!-- My Classes -->
+    <a href="#">
+        <i class="bi bi-people me-2"></i>
+        حلقاتي
+    </a>
+
+    <!-- Home -->
+    <a href="{{ route('home') }}">
+        <i class="bi bi-house-door me-2"></i>
+        الصفحة الرئيسية
+    </a>
+
+    <!-- Logout -->
+    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <i class="bi bi-box-arrow-right me-2"></i>
+        تسجيل الخروج
+    </a>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+</div>
+
 
     <!-- Content -->
     <div class="flex-grow-1 p-4">
