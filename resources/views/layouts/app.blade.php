@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="ltr">
+
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'مركز زيد بن ثابت')</title>
     <link rel="icon" href="{{ asset('img/quran.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,12 +24,15 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     @stack('head') <!-- إذا أردت إضافة أكواد CSS أو meta في صفحات فرعية -->
+    @vite(['resources/js/app.js'])
+
 </head>
+
 <body>
     @include('partials.nav') <!-- شريط التنقل -->
     <!-- محتوى الصفحة -->
     @yield('content')
-   
+
 
     <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -40,4 +45,5 @@
 
     @stack('scripts') <!-- إذا أردت إضافة JS في صفحات فرعية -->
 </body>
+
 </html>

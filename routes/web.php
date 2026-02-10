@@ -9,7 +9,8 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ClassGroupController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\AnnouncementController;
 
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
@@ -58,7 +59,40 @@ Route::get('/courses', [App\Http\Controllers\CourseController::class, 'index'])-
 Route::post('/enroll', [App\Http\Controllers\EnrollmentController::class, 'store'])->name('enrollments.store');
 
 
+Route::prefix('courses/{course}')->group(function () {
+   Route::get('/lessons', [LessonController::class, 'learn'])->name('lessons.learn');
+    Route::get('/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
+    Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
+});
 
+// إدارة الدروس
+Route::prefix('lessons')->group(function () {
+    Route::get('/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
+    Route::get('/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
+    Route::put('/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
+    Route::delete('/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
+
+    // المهام الفرعية
+    Route::post('/{lesson}/subtasks', [LessonController::class, 'addSubTask'])->name('lessons.subtasks.store');
+
+    // بنود العمل
+    Route::post('/{lesson}/workitems', [LessonController::class, 'addWorkItem'])->name('lessons.workitems.store');
+
+    // التعليقات
+    Route::post('/{lesson}/comments', [LessonController::class, 'addComment'])->name('lessons.comments.store');
+
+    // تحديث الحالة
+    Route::post('/{lesson}/status', [LessonController::class, 'updateStatus'])->name('lessons.status.update');
+});
+
+// يمكنك الاحتفاظ بـ CourseController للوظائف الأخرى المتعلقة بالكورسات
+Route::controller(CourseController::class)->group(function () {
+    Route::get('/courses', 'index')->name('courses.index');
+    Route::get('/courses/create', 'create')->name('courses.create');
+
+    });
+
+    Route::get('/center', [AnnouncementController::class, 'index'])->name('center.page');
 
 
 Route::middleware('auth')->group(function () {
@@ -66,7 +100,5 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
 
 require __DIR__.'/auth.php';
