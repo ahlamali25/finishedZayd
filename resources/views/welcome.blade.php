@@ -102,7 +102,7 @@
                             </ul>
                         </div>
                     </div>
-                    <a href="" class="btn btn-primary mt-2 py-2 px-4"> المزيد</a>
+                    <a href="{{ route('center.page') }}" class="btn btn-primary mt-2 py-2 px-4"> المزيد</a>
                 </div>
             </div>
         </div>
@@ -237,7 +237,7 @@ function closeModal() {
                                     {{-- <i class="fa fa-eye"></i>
                                 </button> --}}
                             @else
-                                <a href="{{ route('register') }}" class="btn btn-primary px-4 mx-auto mb-4">
+                                <a href="{{ route('login') }}" class="btn btn-primary px-4 mx-auto mb-4">
                                     انضم الآن
                                 </a>
                             @endauth
@@ -287,26 +287,27 @@ function closeModal() {
                                 @foreach ($chunk as $teacher)
                                     <div class="col-md-6 col-lg-3 text-center team mb-5">
 
-                                        <div class="position-relative overflow-hidden mb-4" style="border-radius: 100%">
-                                            <img class="img-fluid w-100" src="{{ asset('img/teacher.jpeg') }}"
-                                                alt="teacher">
+                                       <div class="position-relative overflow-hidden mb-4" style="border-radius: 100%">
+                                        <img class="img-fluid w-100" src="{{ asset('img/teacher.jpeg') }}"
+                                            alt="teacher">
+                                        <div class="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
+                                            @if($teacher->social && $teacher->social->facebook_link)
+                                            <a class="btn btn-outline-light text-center mr-2 px-0"
+                                                style="width:38px;height:38px"
+                                                href="{{ $teacher->social->facebook_link }}" target="_blank">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            @endif
 
-                                            <div
-                                                class="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                                <a class="btn btn-outline-light text-center mr-2 px-0"
-                                                    style="width:38px;height:38px" href="#">
-                                                    <i class="fab fa-twitter"></i>
-                                                </a>
-                                                <a class="btn btn-outline-light text-center mr-2 px-0"
-                                                    style="width:38px;height:38px" href="#">
-                                                    <i class="fab fa-facebook-f"></i>
-                                                </a>
-                                                <a class="btn btn-outline-light text-center px-0"
-                                                    style="width:38px;height:38px" href="#">
-                                                    <i class="fab fa-linkedin-in"></i>
-                                                </a>
-                                            </div>
+                                            @if($teacher->social && $teacher->social->instagram_link)
+                                            <a class="btn btn-outline-light text-center px-0"
+                                                style="width:38px;height:38px"
+                                                href="{{ $teacher->social->instagram_link }}" target="_blank">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                            @endif
                                         </div>
+                                    </div>
 
                                         <h4>الآنسة {{ $teacher->user->name }}</h4>
                                         <i>{{ $teacher->specialization }}</i>

@@ -49,14 +49,14 @@
             <h4 class="fa fa-map-marker-alt text-primary"></h4>
             <div class="pl-3">
               <h5 class="text-white">العنوان</h5>
-              <p>123 Street, New York, USA</p>
+              <p>123 سوريا, عفرين, الشارع</p>
             </div>
           </div>
           <div class="d-flex">
             <h4 class="fa fa-envelope text-primary"></h4>
             <div class="pl-3">
               <h5 class="text-white">البريد الإلكتروني</h5>
-              <p>info@example.com</p>
+              <p>ZyadIbnThabit@academy.com</p>
             </div>
           </div>
           <div class="d-flex">
@@ -73,18 +73,13 @@
             <a class="text-white mb-2" href="{{ route('home') }}"
               ><i class="fa fa-angle-right mr-2"></i>الرئيسية</a
             >
-            <a class="text-white mb-2" href="#"
+            <a class="text-white mb-2" href="{{ route('center.page') }}"
               ><i class="fa fa-angle-right mr-2"></i>عن المركز </a
             >
             <a class="text-white mb-2" href="{{ route('courses.index') }}"
               ><i class="fa fa-angle-right mr-2"></i>الدورات</a
             >
-            <a class="text-white mb-2" href="#"
-              ><i class="fa fa-angle-right mr-2"></i>المعلمات</a
-            >
-            <a class="text-white" href="#"
-              ><i class="fa fa-angle-right mr-2"></i>التواصل معنا </a
-            >
+        
           </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-5">

@@ -21,4 +21,13 @@ class ClassType extends Model
     return $this->hasMany(ClassGroup::class);
 }
 
+public function courses()
+{
+    return $this->belongsToMany(
+        Course::class,
+        'class_type_courses'
+    );
+}
+
+
 }

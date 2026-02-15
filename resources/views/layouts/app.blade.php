@@ -23,6 +23,26 @@
     <!-- Main CSS -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
+    <!-- Fix navbar position issue -->
+    <style>
+        html[dir="ltr"] {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        html[dir="ltr"] body {
+            order: unset !important;
+        }
+        
+        body .container-fluid.bg-light {
+            order: -999 !important;
+        }
+        
+        html[dir="ltr"] .container-fluid.bg-light {
+            display: contents !important;
+        }
+    </style>
+
     @stack('head') <!-- إذا أردت إضافة أكواد CSS أو meta في صفحات فرعية -->
     @vite(['resources/js/app.js'])
 

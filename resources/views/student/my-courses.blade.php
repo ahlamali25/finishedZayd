@@ -49,10 +49,10 @@
     <!-- Sidebar -->
     <div class="sidebar p-3">
         <h5 class="mb-4"><i class="bi bi-mortarboard"></i> لوحة الطالب</h5>
-
-        <a class="active"><i class="bi bi-speedometer2 me-2"></i> الرئيسية</a>
-        <a href="#"><i class="bi bi-pencil-square me-2"></i> التسجيل</a>
-        <a href="#"><i class="bi bi-book me-2"></i> الكورسات</a>
+        <a class="active" href="{{ route('dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>لوحة التحكم</a>
+        <a href="{{ route('student.courses') }}"><i class="bi bi-book me-2"></i> كورساتي</a>
+        <a href="{{ route('home') }}"><i class="bi bi-house-door me-2"></i> الرئيسية</a>
+        
         <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
     <i class="bi bi-box-arrow-right me-2"></i> تسجيل الخروج
 </a>

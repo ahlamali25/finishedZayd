@@ -91,54 +91,13 @@ class LessonController extends Controller
                         ->with('success', 'تم حذف الدرس بنجاح');
     }
 
-    /**
-     * إضافة مهمة فرعية للدرس
-     */
-    public function addSubTask(Request $request, $lessonId)
-    {
-        // كود إضافة مهمة فرعية
-        // ستقوم بتنفيذ هذا لاحقاً عندما تنشئ نموذج SubTask
+   
 
-        return response()->json([
-            'success' => true,
-            'message' => 'تم إضافة المهمة الفرعية',
-            'data' => $request->all()
-        ]);
-    }
+    
 
-    /**
-     * إضافة بند عمل للدرس
-     */
-    public function addWorkItem(Request $request, $lessonId)
-    {
-        // كود إضافة بند عمل
-        // ستقوم بتنفيذ هذا لاحقاً عندما تنشئ نموذج WorkItem
+   
 
-        return response()->json([
-            'success' => true,
-            'message' => 'تم إضافة بند العمل',
-            'data' => $request->all()
-        ]);
-    }
-
-    /**
-     * إضافة تعليق للدرس
-     */
-    public function addComment(Request $request, $lessonId)
-    {
-        // كود إضافة تعليق
-        // ستقوم بتنفيذ هذا لاحقاً عندما تنشئ نموذج Comment
-
-        return response()->json([
-            'success' => true,
-            'message' => 'تم إضافة التعليق',
-            'data' => $request->all()
-        ]);
-    }
-
-    /**
-     * تحديث حالة الدرس
-     */
+   
     public function updateStatus(Request $request, $lessonId)
     {
         // كود تحديث الحالة

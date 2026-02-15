@@ -52,4 +52,15 @@ class Course extends Model
     {
         return $this->belongsToMany(Class_group::class, 'class_group_courses', 'course_id', 'class_group_id');
     }
+
+    public function classTypes()
+{
+    return $this->belongsToMany(
+        ClassType::class,
+        'class_type_courses'
+    );
+}
+
+
+    
 }

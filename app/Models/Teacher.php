@@ -12,6 +12,11 @@ class Teacher extends Model
         'user_id',
     ];
 
+    public function social()
+    {
+        return $this->hasOne(TeacherSocial::class);
+    }
+
     public function classGroups()
     {
         return $this->hasMany(ClassGroup::class);

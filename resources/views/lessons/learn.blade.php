@@ -1,4 +1,3 @@
-
 <!-- resources/views/lessons/learn.blade.php -->
 @extends('layouts.app')
 
@@ -100,7 +99,7 @@
             </a>
 
             <!-- زر إضافة درس جديد للمشرف -->
-            @if(auth()->check() && auth()->user()->is_admin)
+            @if(auth()->check() && auth()->user()->role_id === 2)
             <a href="{{ route('lessons.create', $course->id) }}" class="btn btn-zid mb-2">
                 <i class="fas fa-plus-circle me-2"></i>إضافة درس جديد
             </a>
@@ -170,7 +169,7 @@
                     </h5>
 
                     <!-- أزرار التحكم للمشرف -->
-                    @if(auth()->check() && auth()->user()->is_admin)
+                    @if(auth()->check() && auth()->user()->role_id === 2)
                     <div class="btn-group">
                         <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-sm btn-light">
                             <i class="fas fa-edit"></i>
@@ -212,24 +211,14 @@
                             <i class="fas fa-play-circle me-2"></i>لا يوجد فيديو
                         </button>
                         @endif
-                        <!-- زر عرض الدرس -->
-                        <a href="{{ route('lessons.show', $lesson->id) }}" class="btn btn-outline-primary w-100">
+<!-- زر عرض الدرس -->
+                        <a href="{{ route('lessons.learn', $lesson->id) }}" class="btn btn-outline-primary w-100">
                             <i class="fas fa-eye me-2"></i>عرض التفاصيل
                         </a>
                     </div>
 
-                    <!-- المهام الفرعية -->
-                    <div class="mb-3">
-                        <h6 class="border-bottom pb-2">
-                            <i class="fas fa-tasks me-2"></i>المهام الفرعية
-                        </h6>
-                        <div id="subtasks-{{ $lesson->id }}">
-                            <!-- سيتم ملؤها بالجافاسكريبت -->
-                        </div>
-                        <button class="btn btn-sm btn-outline-primary mt-2 add-subtask" data-lesson="{{ $lesson->id }}">
-                            <i class="fas fa-plus me-1"></i>إضافة مهمة فرعية
-                        </button>
-                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -248,69 +237,3 @@
         </div>
         @endforelse
     </div>
-
-    <!-- قسم التعليقات المشتركة -->
-@if($lessons->count() > 0)
-<div class="row mt-5">
-    <div class="col-12">
-        <div class="card comment-section">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">
-                    <i class="fas fa-comments me-2"></i>التعليقات العامة
-                </h5>
-            </div>
-            <div class="card-body">
-                <!-- أضف هذا الحقل المخفي لحفظ معرف الدرس -->
-                <input type="hidden" id="selectedLessonId" value="{{ $lessons->first()->id ?? 0 }}">
-
-                <form id="commentForm">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="commentText" class="form-label">تعليقك على الكورس</label>
-                        <textarea class="form-control" id="commentText" rows="3"
-                                  placeholder="شاركنا رأيك أو استفسارك حول الكورس..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-zid">
-                        <i class="fas fa-paper-plane me-2"></i>إرسال التعليق
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-    // إرسال تعليق
-    $('#commentForm').submit(function(e) {
-        e.preventDefault();
-        const comment = $('#commentText').val();
-        const lessonId = $('#selectedLessonId').val();  // الحصول على معرف الدرس
-
-        if (comment && lessonId > 0) {
-            $.ajax({
-                url: '/lessons/' + lessonId + '/comments',  // الطريقة المباشرة
-                method: 'POST',
-                data: {
-                    comment: comment,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    alert('تم إضافة التعليق بنجاح');
-                    $('#commentText').val('');
-                },
-                error: function() {
-                    alert('حدث خطأ أثناء إضافة التعليق');
-                }
-            });
-        } else {
-            alert('يرجى إدخال تعليق');
-        }
-    });
-});
-</script>
-@endsection
-@endif
-</div>
-@endsection

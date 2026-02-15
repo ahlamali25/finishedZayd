@@ -43,7 +43,7 @@
                     @endif
                 @endauth
 
-                <a href="#" class="nav-item nav-link">التواصل معنا</a>
+             
 
             </div>
 

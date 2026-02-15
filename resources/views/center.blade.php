@@ -1,6 +1,4 @@
-<!-- resources/views/center.blade.php -->
-
-@extends('layouts.app') <!-- إذا عندك layout جاهز -->
+@extends('layouts.app') 
 
 @section('content')
 
@@ -22,7 +20,7 @@
                     ، وإنَّ العُلَماءَ ورثةُ الأنبياءِ إنَّ الأنبياءَ لم يورِّثوا دينارًا ولا درهمًا إنَّما ورَّثوا العلمَ فمَن أخذَهُ أخذَ بحظٍّ وافر
                 </p>
 
-                <!-- الآية القرآنية -->
+                <!-- الآية -->
                 <p class="text-primary font-weight-bold h5">
                     وَقُل رَّبِّ زِدْنِي عِلْمًا
                     <span class="text-secondary d-block mt-2" style="font-size: 16px;">
@@ -31,19 +29,19 @@
                 </p>
             </div>
 
-            <!-- صورة الهيرو (نفس صورة Navbar) -->
-           <div class="col-md-6 text-center">
-    <img src="{{ asset('img/reg.jpeg') }}" 
-         class="img-fluid rounded shadow"
-         alt="المركز">
-</div>
+            <!-- الصورة -->
+            <div class="col-md-6 text-center">
+                <img src="{{ asset('img/reg.jpeg') }}" 
+                     class="img-fluid rounded shadow"
+                     alt="المركز">
+            </div>
 
         </div>
     </div>
 </div>
 <!-- Hero End -->
 
-<!-- من نحن Start -->
+<!-- من نحن -->
 <div class="container py-5">
     <h2 class="text-primary font-weight-bold mb-4 text-center">
         من نحن
@@ -53,9 +51,8 @@
         وتنظيم العملية التعليمية باستخدام أحدث الوسائل التقنية.
     </p>
 </div>
-<!-- من نحن End -->
 
-<!-- إنجازات المعهد Start -->
+<!-- إنجازات -->
 <div class="container-fluid py-5" style="background-color: #f8f9fa;">
     <div class="container">
         <h2 class="text-primary font-weight-bold mb-5 text-center">
@@ -64,7 +61,6 @@
 
         <div class="row text-center">
 
-            <!-- إنجاز 1 -->
             <div class="col-md-4 mb-4">
                 <div class="p-4 bg-white rounded shadow-sm h-100 hover-shadow">
                     <div class="mb-3">
@@ -77,7 +73,6 @@
                 </div>
             </div>
 
-            <!-- إنجاز 2 -->
             <div class="col-md-4 mb-4">
                 <div class="p-4 bg-white rounded shadow-sm h-100 hover-shadow">
                     <div class="mb-3">
@@ -85,12 +80,11 @@
                     </div>
                     <h5 class="text-primary font-weight-bold mb-2">تحفيز الطلاب</h5>
                     <p class="text-secondary">
-                        برامج تحفيزية ومسابقات أسبوعية لتشجيع الطلاب على الاجتهاد والمثابرة في الحفظ والفهم.
+                        برامج تحفيزية ومسابقات أسبوعية لتشجيع الطلاب على الاجتهاد والمثابرة.
                     </p>
                 </div>
             </div>
 
-            <!-- إنجاز 3 -->
             <div class="col-md-4 mb-4">
                 <div class="p-4 bg-white rounded shadow-sm h-100 hover-shadow">
                     <div class="mb-3">
@@ -98,7 +92,7 @@
                     </div>
                     <h5 class="text-primary font-weight-bold mb-2">بيئة تعليمية داعمة</h5>
                     <p class="text-secondary">
-                        بيئة تربوية هادئة ومشجعة، مع معلمات متميزات يهتممن بتطوير مهارات الطلاب وحفظهم للقرآن.
+                        بيئة تربوية هادئة ومشجعة مع معلمات متميزات.
                     </p>
                 </div>
             </div>
@@ -106,46 +100,81 @@
         </div>
     </div>
 </div>
-<!-- إنجازات المعهد End -->
 
 <style>
-/* تأثير بسيط عند المرور على الكارد */
 .hover-shadow:hover {
     transform: translateY(-5px);
     transition: all 0.3s ease;
 }
 </style>
 
-
-<!-- الإعلانات Start -->
+<!-- الإعلانات -->
 <div class="container-fluid bg-light py-5">
     <div class="container">
-        <!-- عنوان القسم -->
         <h2 class="text-primary font-weight-bold mb-4 text-center">
             الإعلانات
         </h2>
 
         <div class="row">
             @forelse($announcements as $announcement)
+
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm rounded">
                         <div class="card-body">
-                            <!-- عنوان الإعلان -->
-                            <h5 class="card-title text-primary">{{ $announcement->title }}</h5>
 
-                            <!-- محتوى الإعلان -->
-                            <p class="card-text text-secondary">{{ $announcement->contact }}</p>
+                            <!-- العنوان -->
+                            <h5 class="card-title text-primary">
+                                {{ $announcement->title }}
+                            </h5>
+
+                            <!-- المحتوى -->
+                            <p class="card-text text-secondary">
+                                {{ $announcement->content }}
+                            </p>
+
+                            <!-- الأزرار (مضافة فقط) -->
+                            @auth
+                            @if(auth()->user()->role_id == 1)
+                            <div class="d-flex gap-2 mt-3">
+
+                                <!-- تعديل -->
+                                <a href="{{ route('admin.announcements.edit', $announcement) }}"
+                                   class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> تعديل
+                                </a>
+
+                                <!-- حذف -->
+                                <form action="{{ route('admin.announcements.destroy', $announcement) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('هل أنت متأكد من حذف هذا الإعلان؟')">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+                                </form>
+
+                            </div>
+                            @endif
+                            @endauth
+                            <!-- نهاية الأزرار -->
+
                         </div>
                     </div>
                 </div>
+
             @empty
                 <div class="col-12">
-                    <p class="text-center text-secondary">لا توجد إعلانات حالياً.</p>
+                    <p class="text-center text-secondary">
+                        لا توجد إعلانات حالياً.
+                    </p>
                 </div>
             @endforelse
         </div>
     </div>
 </div>
-<!-- الإعلانات End -->
 
 @endsection

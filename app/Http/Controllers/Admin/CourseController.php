@@ -27,13 +27,25 @@ public function store(Request $request)
         'description' => 'required',
         'total_sessions' => 'required|integer',
         'teacher_id' => 'required|exists:teachers,id',
-        'class_type_id' => 'nullable|exists:class_types,id',
+        'class_type_id' => 'required|exists:class_types,id',
     ]);
 
-    Course::create($request->all());
+    // إنشاء الكورس
+    $course = Course::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'total_sessions' => $request->total_sessions,
+        'teacher_id' => $request->teacher_id,
+    ]);
 
-    return back()->with('success', 'تم إضافة الكورس');
+    // ربطه بنوع الحلقة (Pivot)
+    $course->classTypes()->attach($request->class_type_id);
+
+    return redirect()
+        ->back()
+        ->with('success', 'تم إنشاء الكورس وربطه بنوع الحلقة');
 }
+
 
 public function create()
 {

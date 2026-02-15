@@ -180,6 +180,12 @@
             </a>
         </div>
 
+        <a href="{{ route('admin.announcements.create') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle"></i>
+                إضافة إعلان
+            </a>
+
+
         <div class="row g-3">
             @forelse($courses as $course)
                 <div class="col-md-6">
@@ -193,14 +199,11 @@
                                 تعديل
                             </a>
 
-                            <form action="{{ route('admin.courses.destroy', $course->id) }}"
-                                  method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-outline-danger btn-sm">
-                                    حذف
-                                </button>
-                            </form>
+                   <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST"
+                                onsubmit="return confirmDelete()">
+                              @csrf @method('DELETE')
+                              <button type="submit" class="btn btn-danger">حذف</button>
+                          </form>
                         </div>
                     </div>
                 </div>
@@ -213,5 +216,11 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function confirmDelete() {
+        return confirm('هل أنت متأكد من حذف هذا الكورس؟');
+    }
+    </script>
 </body>
 </html>

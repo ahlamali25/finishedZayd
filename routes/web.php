@@ -24,6 +24,17 @@ Route::middleware(['auth', 'admin'])
 
          Route::get('/users', [UserController::class, 'index'])
         ->name('users.index');
+
+        Route::prefix('announcements')->name('announcements.')->group(function () {
+            Route::get('/', [AnnouncementController::class, 'index'])->name('index');
+            Route::get('/create', [AnnouncementController::class, 'create'])->name('create'); 
+            Route::post('/', [AnnouncementController::class, 'store'])->name('store'); 
+            Route::get('/{announcement}/edit', [AnnouncementController::class, 'edit'])->name('edit');    
+            Route::put('/{announcement}', [AnnouncementController::class, 'update'])->name('update');
+            Route::delete('/{announcement}', [AnnouncementController::class, 'destroy'])->name('destroy');
+        });
+
+
 });
 
 
@@ -65,25 +76,31 @@ Route::prefix('courses/{course}')->group(function () {
     Route::post('/lessons', [LessonController::class, 'store'])->name('lessons.store');
 });
 
-// إدارة الدروس
-Route::prefix('lessons')->group(function () {
-    Route::get('/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
-    Route::get('/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
-    Route::put('/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
-    Route::delete('/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
+// عرض صفحة تعلم الدروس
+Route::get('lessons/learn/{courseId}', [LessonController::class, 'learn'])
+    ->name('lessons.learn');
 
-    // المهام الفرعية
-    Route::post('/{lesson}/subtasks', [LessonController::class, 'addSubTask'])->name('lessons.subtasks.store');
+// عرض نموذج إنشاء درس
+Route::get('lessons/create/{courseId}', [LessonController::class, 'create'])
+    ->name('lessons.create');
 
-    // بنود العمل
-    Route::post('/{lesson}/workitems', [LessonController::class, 'addWorkItem'])->name('lessons.workitems.store');
+// حفظ درس جديد
+Route::post('lessons', [LessonController::class, 'store'])
+    ->name('lessons.store');
 
-    // التعليقات
-    Route::post('/{lesson}/comments', [LessonController::class, 'addComment'])->name('lessons.comments.store');
+// عرض نموذج تعديل درس
+Route::get('lessons/{id}/edit', [LessonController::class, 'edit'])
+    ->name('lessons.edit');
 
-    // تحديث الحالة
-    Route::post('/{lesson}/status', [LessonController::class, 'updateStatus'])->name('lessons.status.update');
-});
+// تحديث درس
+Route::put('lessons/{id}', [LessonController::class, 'update'])
+    ->name('lessons.update');
+
+// حذف درس
+Route::delete('lessons/{id}', [LessonController::class, 'destroy'])
+    ->name('lessons.destroy');
+//
+Route::get('/lessons/{id}', [LessonController::class, 'show'])->name('lessons.show');
 
 // يمكنك الاحتفاظ بـ CourseController للوظائف الأخرى المتعلقة بالكورسات
 Route::controller(CourseController::class)->group(function () {
@@ -93,6 +110,9 @@ Route::controller(CourseController::class)->group(function () {
     });
 
     Route::get('/center', [AnnouncementController::class, 'index'])->name('center.page');
+
+    Route::get('/class-groups/{classGroup}/courses', [ClassGroupController::class, 'showCourses'])
+     ->name('class_groups.courses');
 
 
 Route::middleware('auth')->group(function () {
