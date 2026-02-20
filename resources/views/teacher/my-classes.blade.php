@@ -58,17 +58,13 @@
         لوحة التحكم
     </a>
 
-    <!-- My Courses -->
-    <a href="{{ route('teacher.my-courses') }}">
-        <i class="bi bi-book me-2"></i>
-        كورساتي
-    </a>
 
-    <!-- My Classes -->
-    <a href="{{ route('teacher.my-classes') }}">
-        <i class="bi bi-people me-2"></i>
-        حلقاتي
-    </a>
+
+ <!-- My Classes -->
+<a href="{{ route('teacher.my-classes') }}">
+    <i class="bi bi-people me-2"></i>
+    حلقاتي
+</a>
 
     <!-- Home -->
     <a href="{{ route('home') }}">
@@ -97,7 +93,7 @@
                 <p class="mb-1">التاريخ: {{ now()->format('Y-m-d') }}</p>
                 <h4>مرحباً بك، {{"آ." . auth()->user()->name }} 👨‍🏫</h4>
                 <small>
-                    عدد الكورسات: {{ $courses->count() }} |
+                   
                     عدد الحلقات: {{ $classGroups->count() }}
                 </small>
             </div>
@@ -106,30 +102,7 @@
                  class="rounded-circle bg-white p-2">
         </div>
 
-        <!-- Courses -->
-        <div class="d-flex justify-content-between mb-2">
-            <h5>الكورسات التي أدرّسها</h5>
-        </div>
-
-        <div class="row g-3">
-            @forelse($courses as $course)
-                <div class="col-md-6">
-                    <div class="card card-box p-3">
-                        <h6>{{ $course->name }}</h6>
-                        <p class="text-muted small mb-2">
-                            {{ $course->description }}
-                        </p>
-                        <a href="{{ route('lessons.learn', $course->id) }}"
-                           class="btn btn-success btn-sm">
-                            إدارة الكورس
-                        </a>
-                    </div>
-                </div>
-            @empty
-                <p class="text-muted">لا توجد كورسات.</p>
-            @endforelse
-        </div>
-
+        
         <!-- Classes -->
         <div class="card shadow-sm mt-4 mb-5">
             <div class="card-header">
@@ -149,7 +122,7 @@
                             <li class="list-group-item d-flex align-items-center">
                                 <div style="width:40%">
                                     <strong>
-                                        {{ $type->name }} - {{ $class->group_number }}
+                                        {{ $type->name }} - مجموعة {{ $class->group_number }}
                                     </strong>
                                 </div>
 
@@ -158,7 +131,6 @@
                                     -
                                     {{ date('H:i', strtotime($type->end_time)) }}
                                 </div>
-
                                 <div class="text-end" style="width:30%">
                                     <a href="{{ route('classes.show', $class->id) }}"
                                        class="btn btn-outline-success btn-sm">

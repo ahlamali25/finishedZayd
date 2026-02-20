@@ -7,6 +7,7 @@ use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ClassGroupController as AdminClassGroupController;
 use App\Http\Controllers\ClassGroupController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
@@ -19,6 +20,19 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
+
+        // المسارات المحددة قبل resource (لها أولوية)
+        Route::get('courses/classgroup', [AdminClassGroupController::class, 'classgroup'])
+            ->name('courses.classgroup');
+
+        Route::prefix('class-groups')
+            ->name('class-groups.')
+            ->group(function () {
+                Route::get('/', [AdminClassGroupController::class, 'index'])
+                    ->name('index');
+                Route::post('assign', [AdminClassGroupController::class, 'assignStore'])
+                    ->name('assign.store');
+            });
 
         Route::resource('courses', CourseController::class);
 
@@ -38,17 +52,30 @@ Route::middleware(['auth', 'admin'])
 });
 
 
+// المعلم
 Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'index'])
         ->name('teacher.dashboard');
+
+   // كورساتي
+    Route::get('/teacher/my-courses', [TeacherDashboardController::class, 'myCourses'])
+        ->name('teacher.my-courses');
+    //حلقاتي
+    Route::get('/teacher/my-classes', [TeacherDashboardController::class, 'myClasses'])
+        ->name('teacher.my-classes');
+    
+    // start lesson route
+    Route::post('/lessons/{lesson}/start', [App\Http\Controllers\LessonController::class, 'startLesson'])
+        ->name('lessons.start');
+  
 });
 
 
 Route::get('/student/dashboard', 
     [DashboardController::class, 'index']
-)->middleware(['auth', 'verified'])->name('dashboard');
+)->middleware(['auth', 'verified', 'student'])->name('dashboard');
 
-Route::middleware('auth')
+Route::middleware(['auth', 'student'])
     ->get('/student/my-courses', [DashboardController::class, 'myCourses'])
     ->name('student.courses');
 
@@ -120,5 +147,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Mark notifications as read
+Route::post('/notifications/mark-read', function () {
+    $user = auth()->user();
+    if ($user) {
+        $user->unreadNotifications->markAsRead();
+    }
+    return response()->json(['ok' => true]);
+})->middleware('auth')->name('notifications.markRead');
 
 require __DIR__.'/auth.php';

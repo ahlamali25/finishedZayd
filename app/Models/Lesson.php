@@ -10,7 +10,8 @@ class Lesson extends Model
        'course_id',
        'title',
        'video_link',
-       'date',
+         'date',
+         'time',
     ];
 
     public function course()

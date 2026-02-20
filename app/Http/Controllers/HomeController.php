@@ -70,13 +70,13 @@ public function joinClass($class_type_id)
             ->orderBy('group_number', 'desc')
             ->first();
 
-        $group = ClassGroup::create([
-            'group_number' => $lastGroup ? $lastGroup->group_number + 1 : 1,
-            'capacity' => 30,
-            'current_count' => 0,
-            'teacher_id' => 1,
-            'class_type_id' => $class_type_id,
-        ]);
+$group = ClassGroup::create([
+    'group_number' => $lastGroup ? $lastGroup->group_number + 1 : 1,
+    'capacity' => 30,
+    'current_count' => 0,
+    'class_type_id' => $class_type_id,
+]);
+
     }
 
     // ربط الطالب

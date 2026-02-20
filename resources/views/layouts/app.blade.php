@@ -29,15 +29,15 @@
             display: flex !important;
             flex-direction: column !important;
         }
-        
+
         html[dir="ltr"] body {
             order: unset !important;
         }
-        
+
         body .container-fluid.bg-light {
             order: -999 !important;
         }
-        
+
         html[dir="ltr"] .container-fluid.bg-light {
             display: contents !important;
         }
@@ -64,6 +64,7 @@
     <script src="{{ asset('js/main.js') }}"></script>
 
     @stack('scripts') <!-- إذا أردت إضافة JS في صفحات فرعية -->
+    {{-- notification listener moved to partials.nav to avoid duplication --}}
 </body>
 
 </html>

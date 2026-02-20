@@ -20,6 +20,7 @@
             min-height: 100vh;
             background: #4da1b4;
             color: #fff;
+            box-sizing: border-box;
         }
 
         .sidebar h5 {
@@ -90,8 +91,8 @@
         
 
         <!-- Groups -->
-        <a href="#"
-           class="sidebar-link">
+        <a href="{{ route('admin.class-groups.index') }}"
+           class="sidebar-link {{ request()->routeIs('admin.class_groups.*') ? 'active' : '' }}">
             <i class="bi bi-diagram-3"></i>
             الحلقات
         </a>
@@ -172,18 +173,37 @@
         </div>
 
         <!-- Courses -->
-        <div class="d-flex justify-content-between mb-3">
-            <h5>أحدث الكورسات</h5>
-            <a href="{{ route('admin.courses.create') }}" class="btn btn-success btn-sm">
-                <i class="bi bi-plus-circle"></i>
-                إضافة كورس
-            </a>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
 
-        <a href="{{ route('admin.announcements.create') }}" class="btn btn-success btn-sm">
-                <i class="bi bi-plus-circle"></i>
-                إضافة إعلان
-            </a>
+    <h5 class="mb-0">أحدث الكورسات</h5>
+
+    <div class="d-flex gap-2">
+
+        <!-- إضافة كورس -->
+        <a href="{{ route('admin.courses.create') }}"
+           class="btn btn-success btn-sm">
+            <i class="bi bi-plus-circle"></i>
+            إضافة كورس
+        </a>
+
+        <!-- اختيار كورسات الحلقة -->
+        <a href="{{ route('admin.courses.classgroup') }}"
+           class="btn btn-primary btn-sm">
+            <i class="bi bi-diagram-3"></i>
+            تعيين كورسات الحلقة
+        </a>
+
+        <!-- إضافة إعلان -->
+        <a href="{{ route('admin.announcements.create') }}"
+           class="btn btn-warning btn-sm">
+            <i class="bi bi-megaphone"></i>
+            إضافة إعلان
+        </a>
+
+    </div>
+
+</div>
+
 
 
         <div class="row g-3">

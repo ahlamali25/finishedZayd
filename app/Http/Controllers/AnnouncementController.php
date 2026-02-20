@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 use App\Models\Announcement;
 use App\Models\Course;
+use App\Models\User;
+use App\Notifications\AnnouncementCreatedNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class AnnouncementController extends Controller
 {
@@ -39,12 +44,19 @@ class AnnouncementController extends Controller
         ]);
 
         // إنشاء الإعلان الجديد
-        Announcement::create([
+        $announcement = Announcement::create([
             'user_id' => Auth::id(), // المدير الحالي
             'course_id' => $request->course_id ?: null,
             'title' => $request->title,
             'content' => $request->content,
         ]);
+
+        // إرسال إشعار للطلاب والمعلمين (بدون الحاجة لعمل ريفرش بفضل البث)
+        $users = User::whereHas('role', function ($q) {
+            $q->whereIn('role_name', ['student', 'teacher']);
+        })->get();
+
+        Notification::send($users, new AnnouncementCreatedNotification($announcement));
 
         // إعادة التوجيه مع رسالة نجاح
         return redirect()->route('center.page')

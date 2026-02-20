@@ -58,17 +58,13 @@
         لوحة التحكم
     </a>
 
-    <!-- My Courses -->
-    <a href="{{ route('teacher.my-courses') }}">
-        <i class="bi bi-book me-2"></i>
-        كورساتي
-    </a>
+   <!-- My Courses -->
+<a href="{{ route('teacher.my-courses') }}">
+    <i class="bi bi-book me-2"></i>
+    كورساتي
+</a>
 
-    <!-- My Classes -->
-    <a href="{{ route('teacher.my-classes') }}">
-        <i class="bi bi-people me-2"></i>
-        حلقاتي
-    </a>
+ 
 
     <!-- Home -->
     <a href="{{ route('home') }}">
@@ -97,8 +93,8 @@
                 <p class="mb-1">التاريخ: {{ now()->format('Y-m-d') }}</p>
                 <h4>مرحباً بك، {{"آ." . auth()->user()->name }} 👨‍🏫</h4>
                 <small>
-                    عدد الكورسات: {{ $courses->count() }} |
-                    عدد الحلقات: {{ $classGroups->count() }}
+                    عدد الكورسات: {{ $courses->count() }} 
+                  
                 </small>
             </div>
 
@@ -130,47 +126,8 @@
             @endforelse
         </div>
 
-        <!-- Classes -->
-        <div class="card shadow-sm mt-4 mb-5">
-            <div class="card-header">
-                <h5 class="mb-0">الحلقات التي أدرّسها</h5>
-            </div>
+    
 
-            <div class="card-body">
-                @if($classGroups->isEmpty())
-                    <p>لا توجد حلقات.</p>
-                @else
-                    <ul class="list-group list-group-flush">
-                        @foreach($classGroups as $class)
-                            @php
-                                $type = $class->classType;
-                            @endphp
-
-                            <li class="list-group-item d-flex align-items-center">
-                                <div style="width:40%">
-                                    <strong>
-                                        {{ $type->name }} - {{ $class->group_number }}
-                                    </strong>
-                                </div>
-
-                                <div class="text-muted text-center" style="width:30%">
-                                    {{ date('H:i', strtotime($type->start_time)) }}
-                                    -
-                                    {{ date('H:i', strtotime($type->end_time)) }}
-                                </div>
-
-                                <div class="text-end" style="width:30%">
-                                    <a href="{{ route('classes.show', $class->id) }}"
-                                       class="btn btn-outline-success btn-sm">
-                                        إدارة الحلقة
-                                    </a>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
-        </div>
 
     </div>
 </div>

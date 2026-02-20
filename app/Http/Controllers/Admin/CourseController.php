@@ -27,24 +27,20 @@ public function store(Request $request)
         'description' => 'required',
         'total_sessions' => 'required|integer',
         'teacher_id' => 'required|exists:teachers,id',
-        'class_type_id' => 'required|exists:class_types,id',
     ]);
 
-    // إنشاء الكورس
-    $course = Course::create([
+    Course::create([
         'name' => $request->name,
         'description' => $request->description,
         'total_sessions' => $request->total_sessions,
         'teacher_id' => $request->teacher_id,
     ]);
 
-    // ربطه بنوع الحلقة (Pivot)
-    $course->classTypes()->attach($request->class_type_id);
-
     return redirect()
         ->back()
-        ->with('success', 'تم إنشاء الكورس وربطه بنوع الحلقة');
+        ->with('success', 'تم إنشاء الكورس بنجاح');
 }
+
 
 
 public function create()
@@ -57,8 +53,12 @@ public function create()
 
 public function edit(Course $course)
 {
-    return view('admin.courses.edit', compact('course'));
+    return view('admin.courses.edit', [
+        'course' => $course,
+        'teachers' => Teacher::with('user')->get(),
+    ]);
 }
+
 
 
 public function update(Request $request, Course $course)
@@ -71,5 +71,10 @@ public function destroy(Course $course)
 {
     $course->delete();
     return back()->with('success', 'تم حذف الكورس');
+}
+
+public function show(Course $course)
+{
+    return view('admin.courses.show', compact('course'));
 }
 }

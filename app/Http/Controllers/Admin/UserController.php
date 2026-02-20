@@ -16,7 +16,7 @@ class UserController extends Controller
 
     // ===== الطلاب =====
     $students = User::where('role_id', 3)
-        ->with(['courses', 'classGroup'])
+        ->with(['courses', 'classGroup.classType'])
         ->when($courseName, function ($q) use ($courseName) {
             $q->where(function ($qq) use ($courseName) {
                 $qq->whereHas('courses', function ($c) use ($courseName) {

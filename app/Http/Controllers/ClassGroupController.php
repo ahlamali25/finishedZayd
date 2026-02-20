@@ -10,7 +10,7 @@ class ClassGroupController extends Controller
 {
     public function show(ClassGroup $classGroup)
 {
-    return view('classes.show', compact('classGroup'));
+    return view('class_groups.show', compact('classGroup'));
 }
 
   /**

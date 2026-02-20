@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Notifications\LessonStartedNotification;
+use App\Notifications\LessonCreatedNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller
@@ -35,18 +37,30 @@ class LessonController extends Controller
     /**
      * حفظ درس جديد
      */
-    public function store(Request $request)
+    public function store(Request $request, Course $course)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'video_link' => 'nullable|url',
             'date' => 'required|date',
-            'course_id' => 'required|exists:courses,id'
+            'time' => 'nullable|date_format:H:i'
         ]);
 
-        Lesson::create($validated);
+        $validated['course_id'] = $course->id;
 
-        return redirect()->route('lessons.learn', $validated['course_id'])
+        $lesson = Lesson::create($validated);
+
+        // إرسال إشعار بإضافة درس جديد إلى طلاب الكورس والمعلم
+        $students = $course->users;
+
+        Notification::send($students, new LessonCreatedNotification($lesson));
+
+        $teacherUser = $course->teacher->user ?? null;
+        if ($teacherUser) {
+            $teacherUser->notify(new LessonCreatedNotification($lesson));
+        }
+
+        return redirect()->route('lessons.learn', $course->id)
                         ->with('success', 'تم إضافة الدرس بنجاح');
     }
 
