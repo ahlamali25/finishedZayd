@@ -40,6 +40,26 @@
             color:#fff;
             border-radius:18px;
         }
+
+        /* Teacher CTA */
+.teacher-cta{
+    background:#eef2ff;
+    border-radius:18px;
+    padding:18px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.teacher-cta h6{
+    font-weight:600;
+    margin:0;
+    color:#1c2d7a;
+}
+
+.teacher-cta small{
+    color:#6b7280;
+}
     </style>
 </head>
 
@@ -76,6 +96,19 @@
             <img src="{{ asset('img/studentD.jpeg') }}" alt="Student Banner"
                  width="90" class="rounded-circle bg-white p-2" />
         </div>
+
+    <!-- Teacher CTA -->
+    <div class="teacher-cta mb-4">
+        <div>
+            <h6>هل ترغب بأن تصبح معلماً؟</h6>
+            <small>انضم لفريق المعلمين وابدأ رحلتك التعليمية معنا.</small>
+        </div>
+
+        <a href="{{ route('teacher.apply.form') }}"
+           class="btn btn-primary btn-modern">
+           تقديم الطلب
+        </a>
+    </div>
 
         <!-- Courses -->
     

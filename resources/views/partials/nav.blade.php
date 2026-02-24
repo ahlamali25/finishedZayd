@@ -23,9 +23,12 @@
                 <a href="{{ route('courses.index') }}" class="nav-item nav-link">الدورات</a>
 
                 @auth
+
                     @php
                         $role = auth()->user()->role->role_name ?? null;
                     @endphp
+
+
 
                     @if ($role === 'student')
                         <a href="{{ route('dashboard') }}" class="nav-item nav-link">لوحة التحكم</a>

@@ -12,6 +12,7 @@ use App\Http\Controllers\ClassGroupController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\Admin\TeacherApplicationController;
 
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
@@ -48,8 +49,24 @@ Route::middleware(['auth', 'admin'])
             Route::delete('/{announcement}', [AnnouncementController::class, 'destroy'])->name('destroy');
         });
 
+                  Route::get('/teacher-applications', [App\Http\Controllers\Admin\TeacherApplicationController::class, 'index'])
+         ->name('teacher-applications.index');
 
+    Route::get('/teacher-applications/{id}', [App\Http\Controllers\Admin\TeacherApplicationController::class, 'show'])
+         ->name('teacher-applications.show');
+
+    Route::post('/teacher-applications/{id}/approve', [App\Http\Controllers\Admin\TeacherApplicationController::class, 'approve'])
+         ->name('teacher-applications.approve');
+
+    Route::post('/teacher-applications/{id}/reject', [App\Http\Controllers\Admin\TeacherApplicationController::class, 'reject'])
+         ->name('teacher-applications.reject');
 });
+
+
+
+
+
+
 
 
 // المعلم
@@ -156,5 +173,11 @@ Route::post('/notifications/mark-read', function () {
     }
     return response()->json(['ok' => true]);
 })->middleware('auth')->name('notifications.markRead');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/teacher/apply', [TeacherApplicationController::class, 'create'])->name('teacher.apply.form');
+    Route::post('/teacher/apply', [TeacherApplicationController::class, 'store'])->name('teacher.apply.store');
+});
 
 require __DIR__.'/auth.php';

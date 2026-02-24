@@ -111,6 +111,19 @@
             الرئيسية
         </a>
 
+                <!-- Teacher Applications -->
+        <a href="{{ route('admin.teacher-applications.index') }}"
+           class="sidebar-link {{ request()->routeIs('admin.teacher-applications*') ? 'active' : '' }}">
+            <i class="bi bi-person-badge"></i>
+            طلبات التدريس
+            @php
+                $pendingCount = \App\Models\TeacherApplication::where('status', 'pending')->count();
+            @endphp
+            @if($pendingCount > 0)
+                <span class="badge bg-warning text-dark ms-auto">{{ $pendingCount }}</span>
+            @endif
+        </a>
+
         <!-- Logout -->
         <form action="{{ route('logout') }}" method="POST">
             @csrf
