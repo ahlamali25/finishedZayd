@@ -194,11 +194,17 @@
                                 <i class="bi bi-person-badge"></i>
                                 <small style="opacity: 0.9;">المعلمة</small>
                             </div>
+
                             @if ($teacher && $teacher->user)
                                 <p style="font-weight: 600; margin: 0;">{{ $teacher->user->name }}</p>
                             @else
                                 <p style="margin: 0; opacity: 0.8;">غير محدد</p>
                             @endif
+
+                            <a href="{{ route('admin.class-groups.edit', $classType->id) }}"
+   class="btn btn-light btn-sm mt-3">
+    تعديل المشرف والكورسات
+</a>
                         </div>
                     </div>
                 </div>
@@ -277,6 +283,7 @@
                                     @endif
                                 </td>
                             </tr>
+                            
                         @empty
                             <tr>
                                 <td colspan="3" class="no-data">

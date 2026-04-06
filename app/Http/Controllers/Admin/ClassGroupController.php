@@ -7,6 +7,8 @@ use App\Models\ClassGroup;
 use App\Models\ClassType;
 use App\Models\Teacher;
 use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ClassGroupController extends Controller
@@ -19,7 +21,36 @@ class ClassGroupController extends Controller
         $classTypes = ClassType::with(['classGroups.users', 'classGroups.teacher.user', 'classGroups.courses'])
             ->get();
 
-        return view('admin.class_groups.index', compact('classTypes'));
+        // إضافة المتغيرات المطلوبة للإحصائيات
+        $courses = Course::with('teacher.user', 'lessons', 'classGroups')->get();
+        $totalLessons = Lesson::count();
+        $totalStudents = User::where('role_id', 3)->count(); // role_id = 3 للطلاب
+        $totalTeachers = User::where('role_id', 2)->count(); // role_id = 2 للمعلمين
+        $activeCourses = Course::has('lessons')->count();
+
+        // كورس مع أكبر عدد من الطلاب (الأكثر شعبية)
+        $popularCourse = Course::withCount('users')
+            ->orderBy('users_count', 'desc')
+            ->first();
+        $popularCourseName = $popularCourse ? $popularCourse->name : '-';
+
+        // متوسط التقييم (إذا كان لديك نظام تقييم)
+        $avgRating = 4.5; // يمكنك تغيير هذا حسب نظامك
+
+        // دروس اليوم
+        $todaysLessons = Lesson::whereDate('date', now()->toDateString())->count();
+
+        return view('admin.class_groups.index', compact(
+            'classTypes',
+            'courses',
+            'totalLessons',
+            'totalStudents',
+            'totalTeachers',
+            'activeCourses',
+            'popularCourseName',
+            'avgRating',
+            'todaysLessons'
+        ));
     }
 
     /**
@@ -27,11 +58,16 @@ class ClassGroupController extends Controller
      */
     public function classgroup()
     {
-        return view('admin.courses.classgroup', [
-            'classTypes' => ClassType::all(),
-            'teachers' => Teacher::with('user')->get(),
-            'courses' => Course::all(),
-        ]);
+        return view('admin.class_groups.index', compact(
+    'classTypes',
+    'totalSubGroups',
+    'totalStudents',
+    'totalTeachers',
+    'assignedCourses',
+    'activeTeachers',
+    'completedGroups',
+    'avgAttendance'
+));
     }
 
     /**
@@ -51,7 +87,7 @@ class ClassGroupController extends Controller
         ->orderByDesc('group_number')
         ->first();
 
-    $nextGroupNumber = $lastGroup ? $lastGroup->group_number : 1;
+    $nextGroupNumber = $lastGroup ? $lastGroup->group_number + 1 : 1;
 
     // أنشئ الحلقة الفرعية أو احصل عليها
     $classGroup = ClassGroup::firstOrCreate(
@@ -73,5 +109,6 @@ class ClassGroupController extends Controller
         ->route('admin.dashboard')
         ->with('success', 'تم تعيين الكورسات للحلقة بنجاح');
 }
+
 
 }

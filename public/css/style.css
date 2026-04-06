@@ -9936,3 +9936,49 @@ a.text-dark:hover, a.text-dark:focus {
   padding: 0;
   list-style-type: none;
 }
+
+/* Announcement card buttons */
+.announcement-card .btn {
+  min-width: 100px;
+  border-radius: 40px;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.announcement-card .button-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.announcement-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.announcement-card .btn-warning {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #fff;
+}
+
+.announcement-card .btn-warning:hover {
+  background: #d97706;
+  border-color: #d97706;
+}
+
+.announcement-card .btn-danger {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.announcement-card .btn-danger:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.announcement-card .btn i {
+  margin-left: 0.35rem;
+}

@@ -63,7 +63,13 @@ Route::middleware(['auth', 'admin'])
 });
 
 
+Route::get('admin/class-groups/{classType}/edit',
+    [\App\Http\Controllers\Admin\ClassGroupController::class, 'edit']
+)->name('admin.class-groups.edit');
 
+Route::put('admin/class-groups/{classType}',
+    [\App\Http\Controllers\Admin\ClassGroupController::class, 'update']
+)->name('admin.class-groups.update');
 
 
 
@@ -179,5 +185,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/teacher/apply', [TeacherApplicationController::class, 'create'])->name('teacher.apply.form');
     Route::post('/teacher/apply', [TeacherApplicationController::class, 'store'])->name('teacher.apply.store');
 });
+
+Route::delete('/class-group/{classGroup}/leave', [App\Http\Controllers\ClassGroupController::class, 'leave'])
+    ->middleware('auth')
+    ->name('class-group.leave');
 
 require __DIR__.'/auth.php';

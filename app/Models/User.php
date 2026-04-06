@@ -40,7 +40,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function classGroup()
     {
-        return $this->belongsToMany(ClassGroup::class, 'class_group_students', 'user_id', 'class_group_id');
+        return $this->belongsToMany(ClassGroup::class, 'class_group_students', 'user_id', 'class_group_id')
+            ->withTimestamps();
     }
 
     public function enrollments()

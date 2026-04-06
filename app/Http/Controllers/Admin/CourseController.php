@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Teacher;
 use App\Models\ClassType;
+use App\Http\Requests\StoreCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 
 class CourseController extends Controller
 {
@@ -20,21 +22,9 @@ class CourseController extends Controller
     ]);
 }
 
-public function store(Request $request)
+public function store(StoreCourseRequest $request)
 {
-    $request->validate([
-        'name' => 'required',
-        'description' => 'required',
-        'total_sessions' => 'required|integer',
-        'teacher_id' => 'required|exists:teachers,id',
-    ]);
-
-    Course::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'total_sessions' => $request->total_sessions,
-        'teacher_id' => $request->teacher_id,
-    ]);
+    Course::create($request->validated());
 
     return redirect()
         ->back()
@@ -61,9 +51,10 @@ public function edit(Course $course)
 
 
 
-public function update(Request $request, Course $course)
+public function update(UpdateCourseRequest $request, Course $course)
 {
-    $course->update($request->all());
+    $course->update($request->validated());
+
     return back()->with('success', 'تم تعديل الكورس');
 }
 

@@ -154,6 +154,7 @@
                                     case 'براعم الجنة': $image = 'img/buds.png'; break;
                                     case 'زهرات الإيمان': $image = 'img/flower.jpeg'; break;
                                     case 'جيل الفرقان': $image = 'img/furqan.jpeg'; break;
+                                    case 'روّاد الخير': $image = 'img/good.jpeg'; break;
                                     default: $image = 'img/default.jpeg';
                                 }
                             @endphp
@@ -176,6 +177,19 @@
                                         دخول الحلقة
                                     </a>
                                 </div>
+                                              <div>
+                                @foreach(auth()->user()->classGroup as $group)
+                                <!-- زر الانسحاب -->
+                                <form action="{{ route('class-group.leave', $group->id) }}" method="POST"
+                                    onsubmit="return confirm('هل أنت متأكد من رغبتك في الانسحاب من هذه الحلقة؟')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-outline-primary btn-sm ">
+                                        <i class="bi bi-box-arrow-right"></i> مغادرة الحلقة
+                                    </button>
+                                </form>
+                                @endforeach
+                            </div>
                             </li>
                         @endforeach
                     </ul>

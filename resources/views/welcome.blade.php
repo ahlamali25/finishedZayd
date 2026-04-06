@@ -64,7 +64,7 @@
     </div>
 
     <!--  Institute Courses Offers End-->
-    
+
     <!-- About Start -->
     <div class="container-fluid py-5">
         <div class="container">
@@ -109,36 +109,36 @@
     </div>
     <!-- About End -->
 
-      {{-- نافذة تنبيه العمر --}}
-@if (session('error'))
-<div class="modal fade show" id="ageModal" style="display:block;" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center">
+    {{-- نافذة تنبيه العمر --}}
+    @if (session('error'))
+        <div class="modal fade show" id="ageModal" style="display:block;" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-center">
 
-            <div class="modal-header">
-                <h5 class="modal-title text-danger">تنبيه</h5>
-                <button type="button" class="btn-close" onclick="closeModal()"></button>
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">تنبيه</h5>
+                        <button type="button" class="btn-close" onclick="closeModal()"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>{{ session('error') }}</p>
+                        <p class="text-muted">يرجى اختيار الحلقة المناسبة لعُمرك</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="closeModal()">حسنًا</button>
+                    </div>
+
+                </div>
             </div>
-
-            <div class="modal-body">
-                <p>{{ session('error') }}</p>
-                <p class="text-muted">يرجى اختيار الحلقة المناسبة لعُمرك</p>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-primary" onclick="closeModal()">حسنًا</button>
-            </div>
-
         </div>
-    </div>
-</div>
 
-<script>
-function closeModal() {
-    document.getElementById('ageModal').style.display = 'none';
-}
-</script>
-@endif
+        <script>
+            function closeModal() {
+                document.getElementById('ageModal').style.display = 'none';
+            }
+        </script>
+    @endif
 
     <!-- Class Start -->
     <div class="container-fluid pt-5">
@@ -174,13 +174,13 @@ function closeModal() {
                                     $image = 'img/buds.png';
                                     break;
 
-                                case  'روّاد الخير':
+                                case 'روّاد الخير':
                                     $image = 'img/good.jpeg';
                                     break;
 
                                 case 'حملة القرآن':
                                     $image = 'img/quranCampaign.jpeg';
-                                    break;    
+                                    break;
 
                                 default:
                                     // صورة افتراضية عامة
@@ -189,7 +189,7 @@ function closeModal() {
                         }
                     @endphp
 
-                    <div class="col-lg-4 mb-5">
+                    <div class="col-lg-4 mb-5 d-flex">
                         <div class="card border-0 bg-light shadow-sm pb-2">
 
                             <!-- الصورة -->
@@ -203,15 +203,21 @@ function closeModal() {
 
                             <div class="card-footer bg-transparent py-4 px-5">
 
+
+                                <!-- تعديل -->
                                 <div class="row border-bottom">
                                     <div class="col-6 py-1 text-right border-right">
                                         <strong>العمر</strong>
                                     </div>
                                     <div class="col-6 py-1">
-                                        {{ $class->age_from }} -
-                                        {{ $class->age_to ?? 'فما فوق' }}
+                                        @if ($class->name == 'حملة القرآن')
+                                            {{ $class->age_from }} سنة فما فوق
+                                        @else
+                                            {{ $class->age_from }} - {{ $class->age_to }}
+                                        @endif
                                     </div>
                                 </div>
+                                <!--  -->
 
                                 <div class="row border-bottom">
                                     <div class="col-6 py-1 text-right border-right">
@@ -225,16 +231,16 @@ function closeModal() {
 
                             </div>
 
-                              @auth
-                                <form action="{{ route('join.class', $class->id) }}" method="POST"
-                                    style="display: inline;">
+                            @auth
+                                <form action="{{ route('join.class', $class->id) }}" method="POST" style="display: inline;">
                                     @csrf
+                                    <input type="hidden" name="class_type_id" value="{{ $class->id }}">
                                     <button type="submit" class="btn btn-primary px-4 mx-auto mb-4">
                                         انضم الآن
                                     </button>
                                 </form>
                                 {{-- <button class="btn btn-info mx-2" onclick="showGroups({{ $class->id }})"> --}}
-                                    {{-- <i class="fa fa-eye"></i>
+                                {{-- <i class="fa fa-eye"></i>
                                 </button> --}}
                             @else
                                 <a href="{{ route('login') }}" class="btn btn-primary px-4 mx-auto mb-4">
@@ -287,27 +293,28 @@ function closeModal() {
                                 @foreach ($chunk as $teacher)
                                     <div class="col-md-6 col-lg-3 text-center team mb-5">
 
-                                       <div class="position-relative overflow-hidden mb-4" style="border-radius: 100%">
-                                        <img class="img-fluid w-100" src="{{ asset('img/teacher.jpeg') }}"
-                                            alt="teacher">
-                                        <div class="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                            @if($teacher->social && $teacher->social->facebook_link)
-                                            <a class="btn btn-outline-light text-center mr-2 px-0"
-                                                style="width:38px;height:38px"
-                                                href="{{ $teacher->social->facebook_link }}" target="_blank">
-                                                <i class="fab fa-facebook-f"></i>
-                                            </a>
-                                            @endif
+                                        <div class="position-relative overflow-hidden mb-4" style="border-radius: 100%">
+                                            <img class="img-fluid w-100" src="{{ asset('img/teacher.jpeg') }}"
+                                                alt="teacher">
+                                            <div
+                                                class="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
+                                                @if ($teacher->social && $teacher->social->facebook_link)
+                                                    <a class="btn btn-outline-light text-center mr-2 px-0"
+                                                        style="width:38px;height:38px"
+                                                        href="{{ $teacher->social->facebook_link }}" target="_blank">
+                                                        <i class="fab fa-facebook-f"></i>
+                                                    </a>
+                                                @endif
 
-                                            @if($teacher->social && $teacher->social->instagram_link)
-                                            <a class="btn btn-outline-light text-center px-0"
-                                                style="width:38px;height:38px"
-                                                href="{{ $teacher->social->instagram_link }}" target="_blank">
-                                                <i class="fab fa-instagram"></i>
-                                            </a>
-                                            @endif
+                                                @if ($teacher->social && $teacher->social->instagram_link)
+                                                    <a class="btn btn-outline-light text-center px-0"
+                                                        style="width:38px;height:38px"
+                                                        href="{{ $teacher->social->instagram_link }}" target="_blank">
+                                                        <i class="fab fa-instagram"></i>
+                                                    </a>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
 
                                         <h4>الآنسة {{ $teacher->user->name }}</h4>
                                         <i>{{ $teacher->specialization }}</i>

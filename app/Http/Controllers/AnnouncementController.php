@@ -1,118 +1,101 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Announcement;
-use App\Models\Course;
-use App\Models\User;
-use App\Notifications\AnnouncementCreatedNotification;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
+use App\Models\Announcement;
+use App\Services\AnnouncementService;
+use App\Http\Requests\StoreAnnouncementRequest;
+use App\Http\Requests\UpdateAnnouncementRequest;
 
 class AnnouncementController extends Controller
 {
-       public function index()
+    protected $announcementService;
+
+    public function __construct(AnnouncementService $announcementService)
     {
-        $announcements = Announcement::orderBy('created_at', 'desc')->get();
+        $this->announcementService = $announcementService;
+    }
+
+    /**
+     * عرض جميع الإعلانات
+     */
+    public function index()
+    {
+        $announcements = $this->announcementService->getAllAnnouncements();
+
         return view('center', compact('announcements'));
     }
 
-     public function create()
+    /**
+     * عرض صفحة إنشاء إعلان
+     */
+    public function create()
     {
-        // جلب جميع الكورسات لعرضها في القائمة المنسدلة
-        $courses = Course::orderBy('name')->get();
+        $courses = $this->announcementService->getAllCoursesForDropdown();
 
         return view('announcement.create', compact('courses'));
     }
 
     /**
-     * حفظ الإعلان الجديد
+     * حفظ إعلان جديد
      */
-    public function store(Request $request)
+    public function store(StoreAnnouncementRequest $request)
     {
-        // التحقق من البيانات المدخلة
-        $request->validate([
-            'course_id' => 'nullable|exists:courses,id',
-            'title' => 'required|string|max:255|min:3',
-            'content' => 'required|string|min:10',
-        ], [
-            'title.required' => 'عنوان الإعلان مطلوب',
-            'title.min' => 'عنوان الإعلان يجب أن يكون على الأقل 3 أحرف',
-            'content.required' => 'محتوى الإعلان مطلوب',
-            'content.min' => 'محتوى الإعلان يجب أن يكون على الأقل 10 أحرف',
-        ]);
+        $this->announcementService->createAnnouncement(
+            $request->validated()
+        );
 
-        // إنشاء الإعلان الجديد
-        $announcement = Announcement::create([
-            'user_id' => Auth::id(), // المدير الحالي
-            'course_id' => $request->course_id ?: null,
-            'title' => $request->title,
-            'content' => $request->content,
-        ]);
-
-        // إرسال إشعار للطلاب والمعلمين (بدون الحاجة لعمل ريفرش بفضل البث)
-        $users = User::whereHas('role', function ($q) {
-            $q->whereIn('role_name', ['student', 'teacher']);
-        })->get();
-
-        Notification::send($users, new AnnouncementCreatedNotification($announcement));
-
-        // إعادة التوجيه مع رسالة نجاح
         return redirect()->route('center.page')
             ->with('success', 'تم إضافة الإعلان بنجاح!');
     }
 
-    // تعديل الاعلان
+    /**
+     * عرض صفحة تعديل إعلان
+     */
     public function edit(Announcement $announcement)
     {
-        // التحقق من الصلاحيات
+        // التحقق من الصلاحية
         if (auth()->id() !== $announcement->user_id) {
             abort(403, 'ليس لديك صلاحية لتعديل هذا الإعلان');
         }
-    
-    // جلب الكورسات لعرضها في القائمة المنسدلة
-        $courses = Course::all(); 
-    
+
+        $courses = $this->announcementService->getAllCoursesForDropdown();
+
         return view('announcement.edit', compact('announcement', 'courses'));
     }
 
-    // تحديث الاعلان
-    public function update(Request $request, Announcement $announcement)
+    /**
+     * تحديث إعلان
+     */
+    public function update(UpdateAnnouncementRequest $request, Announcement $announcement)
     {
-        // التحقق من الصلاحيات
+        // التحقق من الصلاحية
         if (auth()->id() !== $announcement->user_id) {
             abort(403, 'ليس لديك صلاحية لتعديل هذا الإعلان');
         }
-    
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'course_id' => 'nullable|exists:courses,id'
-        ]);
-    
-        $announcement->update([
-            'title' => $request->title,
-            'content' => $request->content,
-            'course_id' => $request->course_id ?: null,
-            'updated_at' => now(),
-        ]);
-    
+
+        $this->announcementService->updateAnnouncement(
+            $announcement,
+            $request->validated()
+        );
+
         return redirect()->route('center.page')
             ->with('success', 'تم تحديث الإعلان بنجاح');
     }
 
-    // حذف الاعلان
+    /**
+     * حذف إعلان
+     */
     public function destroy(Announcement $announcement)
     {
+        // التحقق من الصلاحية
         if (auth()->id() !== $announcement->user_id) {
             abort(403, 'ليس لديك صلاحية لحذف هذا الإعلان');
         }
-    
-        $announcement->delete();
-    
-        return redirect()->route('center.page')
-          ->with('success', 'تم حذف الإعلان بنجاح');
-    }
 
+        $this->announcementService->deleteAnnouncement($announcement);
+
+        return redirect()->route('center.page')
+            ->with('success', 'تم حذف الإعلان بنجاح');
+    }
 }

@@ -6,8 +6,9 @@
     <!-- Search -->
     <form method="GET" class="mb-4">
         <div class="input-group">
-            <input type="text" name="course" class="form-control" placeholder="ابحث باسم الكورس"
-                value="{{ request('course') }}">
+            <input type="text" name="search" class="form-control"
+    placeholder="ابحث باسم الكورس أو الحلقة"
+    value="{{ request('search') }}">
             <button class="btn btn-primary">بحث</button>
         </div>
     </form>

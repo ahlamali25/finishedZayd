@@ -6,17 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeacherApplication extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'specialization',
-        'experience',
-        'motivation',
-        'status',
-        'certificate_path',
-        'processed_by',
-        'processed_at',
-        'review_notes',
-    ];
+   protected $fillable = [
+    'user_id',
+    'specialization',
+    'experience',
+    'motivation',
+    'certificate_path',
+    'cv',
+    'status',
+    'processed_by',
+    'processed_at',
+    'review_notes'
+];
 
     public function user()
     {
@@ -27,4 +28,5 @@ class TeacherApplication extends Model
     {
         return $this->belongsTo(User::class, 'processed_by');
     }
+
 }

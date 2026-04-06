@@ -7,75 +7,53 @@ use App\Notifications\LessonStartedNotification;
 use App\Notifications\LessonCreatedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
+use App\Services\LessonService;
+use App\Http\Requests\StoreLessonRequest;
 
 class LessonController extends Controller
 {
+    protected $lessonService;
 
-    /**
-     * عرض صفحة تعلم الدروس
-     */
-    public function learn($courseId)
+    public function __construct(LessonService $lessonService)
     {
-        $course = Course::findOrFail($courseId);
-        $lessons = Lesson::where('course_id', $courseId)
-                        ->orderBy('date', 'asc')
-                        ->get();
-
-        return view('lessons.learn', compact('course', 'lessons'));
+        $this->lessonService = $lessonService;
     }
 
-  
-    /**
-     * عرض صفحة إنشاء درس جديد
-     */
+    public function learn($courseId)
+    {
+        $data = $this->lessonService->getCourseWithLessons($courseId);
+
+        return view('lessons.learn', $data);
+    }
+
     public function create($courseId)
     {
         $course = Course::findOrFail($courseId);
         return view('lessons.create', compact('course'));
     }
 
-    /**
-     * حفظ درس جديد
-     */
-    public function store(Request $request, Course $course)
+    public function store(StoreLessonRequest $request, Course $course)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'video_link' => 'nullable|url',
-            'date' => 'required|date',
-            'time' => 'nullable|date_format:H:i'
-        ]);
+        try {
+            $validated = $request->validated();
 
-        $validated['course_id'] = $course->id;
+            $this->lessonService->createLesson($validated, $course);
 
-        $lesson = Lesson::create($validated);
-
-        // إرسال إشعار بإضافة درس جديد إلى طلاب الكورس والمعلم
-        $students = $course->users;
-
-        Notification::send($students, new LessonCreatedNotification($lesson));
-
-        $teacherUser = $course->teacher->user ?? null;
-        if ($teacherUser) {
-            $teacherUser->notify(new LessonCreatedNotification($lesson));
+            return redirect()->route('lessons.learn', $course->id)
+                ->with('success', 'تم إضافة الدرس بنجاح');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['general' => 'حدث خطأ أثناء إضافة الدرس: ' . $e->getMessage()]);
         }
-
-        return redirect()->route('lessons.learn', $course->id)
-                        ->with('success', 'تم إضافة الدرس بنجاح');
     }
 
-    /**
-     * عرض صفحة تعديل درس
-     */
     public function edit($id)
     {
         $lesson = Lesson::findOrFail($id);
         return view('lessons.edit', compact('lesson'));
     }
 
-    /**
-     * تحديث درس
-     */
     public function update(Request $request, $id)
     {
         $lesson = Lesson::findOrFail($id);
@@ -86,78 +64,35 @@ class LessonController extends Controller
             'date' => 'required|date'
         ]);
 
-        $lesson->update($validated);
+        $this->lessonService->updateLesson($lesson, $validated);
 
         return redirect()->route('lessons.learn', $lesson->course_id)
-                        ->with('success', 'تم تحديث الدرس بنجاح');
+            ->with('success', 'تم تحديث الدرس بنجاح');
     }
 
-    /**
-     * حذف درس
-     */
     public function destroy($id)
     {
         $lesson = Lesson::findOrFail($id);
-        $courseId = $lesson->course_id;
-        $lesson->delete();
+
+        $courseId = $this->lessonService->deleteLesson($lesson);
 
         return redirect()->route('lessons.learn', $courseId)
-                        ->with('success', 'تم حذف الدرس بنجاح');
+            ->with('success', 'تم حذف الدرس بنجاح');
     }
 
-   
-
-    
-
-   
-
-   
-    public function updateStatus(Request $request, $lessonId)
+    public function startLesson($lessonId)
     {
-        // كود تحديث الحالة
-        // ستقوم بتنفيذ هذا لاحقاً عندما تنشئ نموذج LessonStatus
+        $lesson = Lesson::findOrFail($lessonId);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'تم تحديث الحالة',
-            'data' => $request->all()
-        ]);
+        $this->lessonService->startLesson($lesson);
+
+        return back()->with('success', 'تم بدء الدرس وإرسال الإشعارات');
     }
 
-    /**
-     * عرض الدرس بشكل منفرد
-     */
     public function show($id)
     {
         $lesson = Lesson::with('course')->findOrFail($id);
         return view('lessons.show', compact('lesson'));
     }
-
-
-    public function startLesson($lessonId)
-{
-    $lesson = Lesson::findOrFail($lessonId);
-
-    // 1️⃣ الطلاب المسجلين بالكورس
-    $students = $lesson->course->users;
-
-    // إرسال إشعار جماعي
-    Notification::send(
-        $students,
-        new LessonStartedNotification($lesson)
-    );
-
-    // 2️⃣ المعلم
-    // عندك teacher_id داخل course
-    $teacherUser = $lesson->course->teacher->user ?? null;
-
-    if ($teacherUser) {
-        $teacherUser->notify(
-            new LessonStartedNotification($lesson)
-        );
-    }
-
-    return back()->with('success', 'تم بدء الدرس وإرسال الإشعارات');
-}
 }
 

@@ -10,32 +10,36 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
+public function index(Request $request)
 {
-    $courseName = $request->course;
+    $search = $request->search;
 
-    // ===== الطلاب =====
     $students = User::where('role_id', 3)
         ->with(['courses', 'classGroup.classType'])
-        ->when($courseName, function ($q) use ($courseName) {
-            $q->where(function ($qq) use ($courseName) {
-                $qq->whereHas('courses', function ($c) use ($courseName) {
-                    $c->where('name', 'like', "%$courseName%");
+        ->when($search, function ($q) use ($search) {
+            $q->where(function ($query) use ($search) {
+
+                // البحث بالكورس
+                $query->whereHas('courses', function ($c) use ($search) {
+                    $c->where('name', 'like', "%$search%");
                 })
-                ->orDoesntHave('courses'); // ⭐ يعرض غير المسجلين
+
+                // أو البحث بالحلقة
+                ->orWhereHas('classGroup', function ($g) use ($search) {
+                    $g->where('group_number', 'like', "%$search%")
+                      ->orWhereHas('classType', function ($t) use ($search) {
+                          $t->where('name', 'like', "%$search%");
+                      });
+                });
             });
         })
         ->get();
 
-    // ===== المعلمين =====
     $teachers = User::where('role_id', 2)
         ->with(['teacher.courses'])
-        ->when($courseName, function ($q) use ($courseName) {
-            $q->where(function ($qq) use ($courseName) {
-                $qq->whereHas('teacher.courses', function ($c) use ($courseName) {
-                    $c->where('name', 'like', "%$courseName%");
-                })
-                ->orDoesntHave('teacher.courses'); // ⭐ يعرض المعلم بدون كورسات
+        ->when($search, function ($q) use ($search) {
+            $q->whereHas('teacher.courses', function ($c) use ($search) {
+                $c->where('name', 'like', "%$search%");
             });
         })
         ->get();
