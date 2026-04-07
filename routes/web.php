@@ -147,8 +147,6 @@ Route::get('lessons/learn/{courseId}', [LessonController::class, 'learn'])
 Route::get('lessons/create/{courseId}', [LessonController::class, 'create'])
     ->name('lessons.create.course');
 
-Route::post('lessons', [LessonController::class, 'store'])->name('lessons.store');
-
 Route::get('lessons/{id}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
 Route::put('lessons/{id}', [LessonController::class, 'update'])->name('lessons.update');
 Route::delete('lessons/{id}', [LessonController::class, 'destroy'])->name('lessons.destroy');
@@ -159,10 +157,7 @@ Route::get('/lessons/{id}', [LessonController::class, 'show'])->name('lessons.sh
 | OTHER
 |--------------------------------------------------------------------------
 */
-Route::controller(CourseController::class)->group(function () {
-    Route::get('/courses', 'index')->name('courses.index');
-    Route::get('/courses/create', 'create')->name('courses.create');
-});
+Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
 
 Route::get('/center', [AnnouncementController::class, 'index'])->name('center.page');
 
