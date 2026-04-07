@@ -115,7 +115,7 @@
                         <p class="text-muted small mb-2">
                             {{ $course->description }}
                         </p>
-                        <a href="{{ route('lessons.learn', $course->id) }}"
+                        <a href="{{ route('lessons.learn.course', $course->id) }}"
                            class="btn btn-success btn-sm">
                             إدارة الكورس
                         </a>

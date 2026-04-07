@@ -128,7 +128,7 @@ Route::prefix('courses/{course}')->group(function () {
 
 // عرض صفحة تعلم الدروس
 Route::get('lessons/learn/{courseId}', [LessonController::class, 'learn'])
-    ->name('lessons.learn');
+    ->name('lessons.learn.course');
 
 // عرض نموذج إنشاء درس
 Route::get('lessons/create/{courseId}', [LessonController::class, 'create'])

@@ -124,7 +124,7 @@
             <div class="card card-box p-3">
                 <h6>{{ $course->name }}</h6>
                 <p class="text-muted small mb-2">{{ $course->description }}</p>
-                <a href="{{ route('lessons.learn', $course->id) }}"
+                <a href="{{ route('lessons.learn.course', $course->id) }}"
    class="btn btn-primary btn-sm">
    الدخول للكورس
 </a>
