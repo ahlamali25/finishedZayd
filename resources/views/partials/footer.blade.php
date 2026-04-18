@@ -16,7 +16,7 @@
           يسعى مركزنا لتحفيظ القرآن الكريم وتعليم العلوم الشرعية واللغة العربية حيث نسعى لتأمين التعلم للجميع سواء كانوا صغارا أو كبارا
           راجين من الله التوفيق والسداد في مسعانا هذا لخدمة كتاب الله تعالى وتعليم الناس الخير
           </p>
-          <div class="d-flex justify-content-start mt-4">
+          {{-- <div class="d-flex justify-content-start mt-4">
             <a
               class="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
               style="width: 38px; height: 38px"
@@ -41,7 +41,7 @@
               href="#"
               ><i class="fab fa-instagram"></i
             ></a>
-          </div>
+          </div> --}}
         </div>
         <div class="col-lg-3 col-md-6 mb-5">
           <h3 class="text-primary mb-4">تواصل معنا</h3>

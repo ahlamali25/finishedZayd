@@ -12,6 +12,11 @@ class ClassService
 {
     public function joinClass($user, $classTypeId)
     {
+        // تحقق من أن المستخدم ليس معلم
+        if ($user->role->role_name === 'teacher') {
+            throw new \Exception('هذه الخدمة غير متوفرة للمعلمين في الوقت الراهن. قريباً جداً سيتم السماح للمعلمين بالانضمام للحلقات.');
+        }
+
         $classType = ClassType::findOrFail($classTypeId);
 
         // تحقق العمر
@@ -53,6 +58,8 @@ class ClassService
 
         // ربط المستخدم
         $group->users()->attach($user->id);
+        // تحديث class_group_id في جدول المستخدمين
+        $user->update(['class_group_id' => $group->id]);
         $group->increment('current_count');
 
         // إرسال الإيميل

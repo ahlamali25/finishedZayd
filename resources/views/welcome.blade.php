@@ -124,7 +124,7 @@
                         <p>{{ session('error') }}</p>
                         <p class="text-muted">يرجى اختيار الحلقة المناسبة لعُمرك</p>
                     </div>
-
+ 
                     <div class="modal-footer">
                         <button class="btn btn-primary" onclick="closeModal()">حسنًا</button>
                     </div>
@@ -139,6 +139,38 @@
             }
         </script>
     @endif
+
+
+    {{-- تنبيه منع الذكور --}}
+@if (session('gender_error'))
+    <div class="modal fade show" id="genderModal" style="display:block;" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">تنبيه</h5>
+                    <button type="button" class="btn-close" onclick="closeGenderModal()"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>{{ session('gender_error') }}</p>
+                    <p class="text-muted">نأمل إتاحة الخدمة للجميع قريبًا بإذن الله</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="closeGenderModal()">حسنًا</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closeGenderModal() {
+            document.getElementById('genderModal').style.display = 'none';
+        }
+    </script>
+@endif
 
     <!-- Class Start -->
     <div class="container-fluid pt-5">
@@ -293,28 +325,70 @@
                                 @foreach ($chunk as $teacher)
                                     <div class="col-md-6 col-lg-3 text-center team mb-5">
 
-                                        <div class="position-relative overflow-hidden mb-4" style="border-radius: 100%">
-                                            <img class="img-fluid w-100" src="{{ asset('img/teacher.jpeg') }}"
-                                                alt="teacher">
-                                            <div
-                                                class="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                                @if ($teacher->social && $teacher->social->facebook_link)
-                                                    <a class="btn btn-outline-light text-center mr-2 px-0"
-                                                        style="width:38px;height:38px"
-                                                        href="{{ $teacher->social->facebook_link }}" target="_blank">
-                                                        <i class="fab fa-facebook-f"></i>
-                                                    </a>
-                                                @endif
+<div class="position-relative overflow-hidden mb-4" style="border-radius: 100%">
+                                <img class="img-fluid w-100" src="{{ asset('img/teacher.jpeg') }}"
+                                            alt="teacher">
+                                        <div class="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
 
-                                                @if ($teacher->social && $teacher->social->instagram_link)
-                                                    <a class="btn btn-outline-light text-center px-0"
-                                                        style="width:38px;height:38px"
-                                                        href="{{ $teacher->social->instagram_link }}" target="_blank">
-                                                        <i class="fab fa-instagram"></i>
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        </div>
+                                    {{-- روابط السوشال --}}
+                                    @if($teacher->social && $teacher->social->facebook_link)
+                                    <a class="btn btn-outline-light text-center mr-2 px-0"
+                                        style="width:38px;height:38px"
+                                        href="{{ $teacher->social->facebook_link }}" target="_blank">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    @endif
+
+                                    @if($teacher->social && $teacher->social->instagram_link)
+                                    <a class="btn btn-outline-light text-center mr-2 px-0"
+                                        style="width:38px;height:38px"
+                                        href="{{ $teacher->social->instagram_link }}" target="_blank">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    @endif
+
+
+                                    {{-- أزرار المعلم فقط --}}
+                                    @auth
+                                    @if(auth()->user()->role_id == 2)
+
+                                    @if($teacher->social)
+
+                                    {{-- زر تعديل --}}
+                                    <a href="{{ route('teacher.social.edit', $teacher->id) }}"
+                                        class="btn btn-warning text-center mr-2 px-0"
+                                        style="width:38px;height:38px">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    {{-- زر حذف --}}
+                                    <form action="{{ route('teacher.social.destroy', $teacher->id) }}"
+                                        method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger text-center px-0"
+                                            style="width:38px;height:38px">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+                                    @else
+
+                                    {{-- زر إضافة --}}
+                                    <a href="{{ route('teacher.social.create', $teacher->id) }}"
+                                        class="btn btn-success text-center px-0"
+                                        style="width:38px;height:38px">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+
+                                    @endif
+
+                                    @endif
+                                    @endauth
+
+                                </div>
+                            </div>
 
                                         <h4>الآنسة {{ $teacher->user->name }}</h4>
                                         <i>{{ $teacher->specialization }}</i>

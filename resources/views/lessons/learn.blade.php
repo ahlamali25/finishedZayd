@@ -239,9 +239,12 @@
                                     </button>
                                 @endif
                                 <!-- زر عرض الدرس -->
-                                <a href="{{ route('lessons.learn', $lesson->id) }}" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-eye me-2"></i>عرض التفاصيل
-                                </a>
+                             <div class="mb-2">
+    <span class="date-badge">
+        <i class="far fa-clock me-1"></i>
+        {{ $lesson->time ?? 'لم يحدد الوقت' }}
+    </span>
+</div>
                             </div>
 
 

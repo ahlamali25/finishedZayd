@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\Admin\TeacherApplicationController;
+use App\Http\Controllers\Teacher\TeacherSocialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,7 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        Route::get('courses/classgroup', [AdminClassGroupController::class, 'classgroup'])
+        Route::get('courses/classgroup', [AdminClassGroupController::class, 'assignForm'])
             ->name('courses.classgroup');
 
         Route::prefix('class-groups')
@@ -60,6 +61,7 @@ Route::middleware(['auth', 'admin'])
 
         Route::post('/teacher-applications/{id}/reject', [TeacherApplicationController::class, 'reject'])
             ->name('teacher-applications.reject');
+
     });
 
 /*
@@ -89,9 +91,35 @@ Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/my-classes', [TeacherDashboardController::class, 'myClasses'])
         ->name('teacher.my-classes');
 
+    // إدارة حلقة فرعية معينة
+    Route::get('/teacher/class-groups/{classGroup}', [TeacherDashboardController::class, 'manageClassGroup'])
+        ->name('teacher.class-group.manage');
+
     Route::post('/lessons/{lesson}/start', [LessonController::class, 'startLesson'])
         ->name('lessons.start');
+
+
 });
+
+Route::get('/teacher/social/create/{teacher}', [TeacherSocialController::class, 'create'])
+    ->middleware(['auth', 'teacher'])
+    ->name('teacher.social.create');
+
+Route::post('/teacher/social/store/{teacher_id}', [TeacherSocialController::class, 'store'])
+    ->middleware(['auth', 'teacher'])
+    ->name('teacher.social.store');
+
+Route::get('/teacher/social/edit/{teacher}', [TeacherSocialController::class, 'edit'])
+    ->middleware(['auth', 'teacher'])
+    ->name('teacher.social.edit');
+
+Route::put('/teacher/social/update/{teacher_id}', [TeacherSocialController::class, 'update'])
+    ->middleware(['auth', 'teacher'])
+    ->name('teacher.social.update');
+
+Route::delete('/teacher/social/{teacher}', [TeacherSocialController::class, 'destroy'])
+    ->middleware(['auth', 'teacher'])
+    ->name('teacher.social.destroy');
 
 /*
 |--------------------------------------------------------------------------

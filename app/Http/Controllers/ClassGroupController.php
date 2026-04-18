@@ -43,6 +43,8 @@ class ClassGroupController extends Controller
         }
 
         $user->classGroup()->detach($classGroup);
+        // مسح class_group_id من جدول المستخدمين
+        $user->update(['class_group_id' => null]);
         $classGroup->decrement('current_count');
 
         return redirect()->back()->with('success', 'تم الانسحاب من الحلقة بنجاح');

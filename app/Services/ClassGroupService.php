@@ -41,25 +41,30 @@ class ClassGroupService
      */
     public function assignCourses(array $data)
     {
-        // رقم الحلقة
-        $lastGroup = ClassGroup::where('class_type_id', $data['class_type_id'])
-            ->orderByDesc('group_number')
+        // استخدم حلقة موجودة من نفس النوع إذا لم تمتلئ بعد
+        $classGroup = ClassGroup::where('class_type_id', $data['class_type_id'])
+            ->whereColumn('current_count', '<', 'capacity')
+            ->orderBy('group_number')
             ->first();
 
-        $nextGroupNumber = $lastGroup ? $lastGroup->group_number + 1 : 1;
+        if (! $classGroup) {
+            $lastGroup = ClassGroup::where('class_type_id', $data['class_type_id'])
+                ->orderByDesc('group_number')
+                ->first();
 
-        // إنشاء المجموعة
-        $classGroup = ClassGroup::firstOrCreate(
-            [
+            $nextGroupNumber = $lastGroup ? $lastGroup->group_number + 1 : 1;
+
+            $classGroup = ClassGroup::create([
                 'class_type_id' => $data['class_type_id'],
                 'teacher_id' => $data['teacher_id'],
                 'group_number' => $nextGroupNumber,
-            ],
-            [
                 'capacity' => 30,
                 'current_count' => 0,
-            ]
-        );
+            ]);
+        } elseif ($classGroup->teacher_id !== $data['teacher_id']) {
+            $classGroup->teacher_id = $data['teacher_id'];
+            $classGroup->save();
+        }
 
         // ربط الكورسات
         $classGroup->courses()->sync($data['courses']);

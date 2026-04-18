@@ -48,7 +48,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="text-center">
                                 <h6 class="text-muted">الكورسات</h6>
-                                <h4>{{ $classGroup->classType->courses->count() }}</h4>
+                                <h4>{{ $classGroup->courses->count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
 
     <!-- قائمة الكورسات -->
     <div class="row">
-        @forelse($classGroup->classType->courses as $course)
+        @forelse($classGroup->courses as $course)
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body">

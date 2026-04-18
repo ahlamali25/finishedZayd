@@ -4,6 +4,8 @@
 
 @section('content')
 
+
+
     <!-- Courses Start -->
     <div class="container py-5">
 
@@ -94,20 +96,4 @@
 
 @endsection
 
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            const authForm = document.getElementById('authForm');
-            const noAuthForm = document.getElementById('noAuthForm');
 
-            if (token) {
-                authForm.style.display = 'block';
-                noAuthForm.style.display = 'none';
-            } else {
-                authForm.style.display = 'none';
-                noAuthForm.style.display = 'block';
-            }
-        });
-    </script>
-@endpush

@@ -64,6 +64,12 @@
     كورساتي
 </a>
 
+    <!-- My Classes -->
+    <a href="{{ route('teacher.my-classes') }}">
+        <i class="bi bi-people me-2"></i>
+        حلقاتي
+    </a>
+
  
 
     <!-- Home -->

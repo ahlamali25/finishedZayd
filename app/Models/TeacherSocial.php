@@ -8,7 +8,7 @@ class TeacherSocial extends Model
 {
     protected $fillable = [
         'teacher_id',
-        'fecebook_link',
+        'facebook_link',
         'instagram_link',
     ];
 

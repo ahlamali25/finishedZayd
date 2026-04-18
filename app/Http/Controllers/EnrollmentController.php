@@ -11,6 +11,11 @@ class EnrollmentController extends Controller
 {
     public function store(Request $request)
     {
+        // تحقق من أن المستخدم ليس معلم
+        if (auth()->user()->role->role_name === 'teacher') {
+            return redirect()->back()->with('error', 'هذه الخدمة غير متوفرة للمعلمين في الوقت الراهن. قريباً جداً سيتم السماح للمعلمين بالانضمام للكورسات.');
+        }
+
         $request->validate([
             'course_id' => 'required|exists:courses,id',
         ]);

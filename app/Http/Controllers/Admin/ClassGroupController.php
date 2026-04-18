@@ -74,41 +74,96 @@ class ClassGroupController extends Controller
      * Store course assignment to class groups
      */
    public function assignStore(Request $request)
+    {
+        $validated = $request->validate([
+            'class_type_id' => 'required|exists:class_types,id',
+            'teacher_id' => 'required|exists:teachers,id',
+            'courses' => 'required|array',
+            'courses.*' => 'exists:courses,id',
+        ]);
+
+        // إذا كانت هناك حلقة موجودة من نفس النوع ولم تمتلئ بعد، استخدمها
+        $classGroup = ClassGroup::where('class_type_id', $validated['class_type_id'])
+            ->whereColumn('current_count', '<', 'capacity')
+            ->orderBy('group_number')
+            ->first();
+
+        if (! $classGroup) {
+            $lastGroup = ClassGroup::where('class_type_id', $validated['class_type_id'])
+                ->orderByDesc('group_number')
+                ->first();
+
+            $nextGroupNumber = $lastGroup ? $lastGroup->group_number + 1 : 1;
+
+            $classGroup = ClassGroup::create([
+                'class_type_id' => $validated['class_type_id'],
+                'teacher_id' => $validated['teacher_id'],
+                'group_number' => $nextGroupNumber,
+                'capacity' => 30,
+                'current_count' => 0,
+            ]);
+        } elseif ($classGroup->teacher_id !== $validated['teacher_id']) {
+            $classGroup->teacher_id = $validated['teacher_id'];
+            $classGroup->save();
+        }
+
+        // ربط الكورسات
+        $classGroup->courses()->sync($validated['courses']);
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'تم تعيين الكورسات للحلقة بنجاح');
+    }
+
+public function assignForm()
 {
-    $validated = $request->validate([
-        'class_type_id' => 'required|exists:class_types,id',
-        'teacher_id' => 'required|exists:teachers,id',
-        'courses' => 'required|array',
-        'courses.*' => 'exists:courses,id',
-    ]);
+    $classTypes = ClassType::all();
+    $teachers = Teacher::with('user')->get();
+    $courses = Course::all();
 
-    // احسب رقم الحلقة الفرعية التالي
-    $lastGroup = ClassGroup::where('class_type_id', $validated['class_type_id'])
-        ->orderByDesc('group_number')
-        ->first();
-
-    $nextGroupNumber = $lastGroup ? $lastGroup->group_number + 1 : 1;
-
-    // أنشئ الحلقة الفرعية أو احصل عليها
-    $classGroup = ClassGroup::firstOrCreate(
-        [
-            'class_type_id' => $validated['class_type_id'],
-            'teacher_id' => $validated['teacher_id'],
-            'group_number' => $nextGroupNumber,
-        ],
-        [
-            'capacity' => 30, // العدد الأقصى لكل حلقة
-            'current_count' => 0,
-        ]
-    );
-
-    // ربط الكورسات
-    $classGroup->courses()->sync($validated['courses']);
-
-    return redirect()
-        ->route('admin.dashboard')
-        ->with('success', 'تم تعيين الكورسات للحلقة بنجاح');
+    return view('admin.courses.classgroup', compact(
+        'classTypes',
+        'teachers',
+        'courses'
+    ));
 }
 
+    /**
+     * Show the form for editing class groups for a specific class type
+     */
+    public function edit(ClassType $classType)
+    {
+        $classType->load(['classGroups.users', 'classGroups.teacher.user', 'classGroups.courses']);
+        $teachers = Teacher::with('user')->get();
+        $courses = Course::all();
+        $classGroup = $classType->classGroups->first();
+
+        return view('admin.class_groups.edit', compact('classType', 'teachers', 'courses', 'classGroup'));
+    }
+
+    /**
+     * Update the class groups for a specific class type
+     */
+    public function update(Request $request, ClassType $classType)
+    {
+        $validated = $request->validate([
+            'teacher_id' => 'required|exists:teachers,id',
+            'courses' => 'required|array',
+            'courses.*' => 'exists:courses,id',
+        ]);
+
+        // Find or create a class group for this type
+        $classGroup = ClassGroup::firstOrCreate(
+            ['class_type_id' => $classType->id],
+            ['capacity' => 30, 'current_count' => 0]
+        );
+
+        // Update teacher and courses
+        $classGroup->teacher_id = $validated['teacher_id'];
+        $classGroup->courses()->sync($validated['courses']);
+        $classGroup->save();
+
+        return redirect()->route('admin.class-groups.index')->with('success', 'تم تحديث الحلقة بنجاح');
+    }
 
 }

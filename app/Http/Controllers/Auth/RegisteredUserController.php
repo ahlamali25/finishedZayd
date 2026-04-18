@@ -39,6 +39,11 @@ class RegisteredUserController extends Controller
        
         ]);
 
+        if ($request->gender === 'male') {
+    return redirect()->route('home')
+        ->with('gender_error', 'الخدمة غير متوفرة للذكور حالياً، نسأل الله أن تتوفر قريباً.');
+}
+
         $user = User::create([
              'name' => $request->name,
              'email' => $request->email,
