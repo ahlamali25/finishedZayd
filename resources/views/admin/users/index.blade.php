@@ -36,12 +36,14 @@
                         <td>{{ $student->phone }}</td>
                         <td>{{ $student->age }}</td>
                         <td>
-                            @forelse ($student->classGroup as $group)
-                                <span class="badge bg-secondary">{{ $group->classType->name }} -
-                                    {{ $group->group_number }}</span>
-                            @empty
-                                <span class="text-muted">لا يوجد حلقة</span>
-                            @endforelse
+                        @if ($student->classGroup)
+    <span class="badge bg-secondary">
+        {{ $student->classGroup->classType?->name }} -
+        {{ $student->classGroup->group_number }}
+    </span>
+@else
+    <span class="text-muted">لا يوجد حلقة</span>
+@endif
                         </td>
                         <td>
                             @foreach ($student->courses as $course)

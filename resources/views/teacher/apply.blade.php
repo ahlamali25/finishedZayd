@@ -75,11 +75,6 @@
                                                 accept="application/pdf,image/*">
                                         </div>
 
-                                        <div class="text-end">
-                                            <button type="button" class="btn btn-primary btn-modern btn-next">
-                                                التالي →
-                                            </button>
-                                        </div>
                                     </div>
 
                                     <!-- STEP 2 -->
@@ -90,12 +85,7 @@
                                             <small class="text-muted">حد أدنى 50 حرف</small>
                                         </div>
 
-                                        <div class="d-flex justify-content-between">
-                                            <button type="button" class="btn btn-light btn-modern btn-prev">←
-                                                السابق</button>
-                                            <button type="button" class="btn btn-primary btn-modern btn-next">التالي
-                                                →</button>
-                                        </div>
+                                    
                                     </div>
 
                                     <!-- STEP 3 -->

@@ -57,7 +57,7 @@ class ClassService
         }
 
         // ربط المستخدم
-        $group->users()->attach($user->id);
+       
         // تحديث class_group_id في جدول المستخدمين
         $user->update(['class_group_id' => $group->id]);
         $group->increment('current_count');

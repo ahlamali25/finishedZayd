@@ -17,11 +17,10 @@ class ClassGroup extends Model
         'class_type_id',
     ];
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'class_group_students', 'class_group_id', 'user_id')
-            ->withTimestamps();
-    }
+ public function users()
+{
+    return $this->hasMany(User::class);
+}
 
     public function teacher()
     {

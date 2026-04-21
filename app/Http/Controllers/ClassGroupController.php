@@ -38,11 +38,11 @@ class ClassGroupController extends Controller
     {
         $user = auth()->user();
 
-        if (! $user->classGroup->contains($classGroup)) {
+        if ($user->class_group_id !== $classGroup->id) {
             return redirect()->back()->with('error', 'أنت غير مسجل في هذه الحلقة');
         }
 
-        $user->classGroup()->detach($classGroup);
+   
         // مسح class_group_id من جدول المستخدمين
         $user->update(['class_group_id' => null]);
         $classGroup->decrement('current_count');

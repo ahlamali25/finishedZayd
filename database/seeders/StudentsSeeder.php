@@ -12,7 +12,7 @@ class StudentsSeeder extends Seeder
     {
         $maxStudentsPerGroup = 30;
 
-        User::factory(100)->create()->each(function ($user) use ($maxStudentsPerGroup) {
+        User::factory(60)->create()->each(function ($user) use ($maxStudentsPerGroup) {
 
             $user->update([
                 'role_id' => 3
@@ -36,7 +36,8 @@ if (!$classGroup || $classGroup->users()->count() >= $classGroup->capacity) {
             }
 
             // ربط الطالبة بالمجموعة
-           $user->classGroup()->attach($classGroup->id);
+           $user->update([
+    'class_group_id' => $classGroup->id]);
            $classGroup->increment('current_count');
         });
     }

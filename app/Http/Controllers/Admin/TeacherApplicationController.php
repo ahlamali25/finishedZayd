@@ -59,10 +59,14 @@ class TeacherApplicationController extends Controller
             ]);
 
             // تحديث role_id للمستخدم (2 = معلم)
-            $user = $application->user;
-            if ($user) {
-                $user->update(['role_id' => 2]);
-            }
+         $user = $application->user;
+
+if ($user) {
+    $user->update([
+        'role_id' => 2, // أصبح معلم
+        'class_group_id' => null // ❗ خرج من الحلقة
+    ]);
+}
 
             // إنشاء سجل في جدول teachers إذا لم يكن موجوداً
             $existingTeacher = Teacher::where('user_id', $user->id)->first();

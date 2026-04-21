@@ -178,17 +178,17 @@
                                     </a>
                                 </div>
                                               <div>
-                                @foreach(auth()->user()->classGroup as $group)
-                                <!-- زر الانسحاب -->
-                                <form action="{{ route('class-group.leave', $group->id) }}" method="POST"
-                                    onsubmit="return confirm('هل أنت متأكد من رغبتك في الانسحاب من هذه الحلقة؟')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-primary btn-sm ">
-                                        <i class="bi bi-box-arrow-right"></i> مغادرة الحلقة
-                                    </button>
-                                </form>
-                                @endforeach
+                              @if(auth()->user()->classGroup)
+    <form action="{{ route('class-group.leave', auth()->user()->classGroup->id) }}" method="POST"
+        onsubmit="return confirm('هل أنت متأكد من رغبتك في الانسحاب من هذه الحلقة؟')">
+        @csrf
+        @method('DELETE')
+
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-box-arrow-right"></i> مغادرة الحلقة
+        </button>
+    </form>
+@endif
                             </div>
                             </li>
                         @endforeach

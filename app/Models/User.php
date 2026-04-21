@@ -38,11 +38,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Role::class);
     }
 
-    public function classGroup()
-    {
-        return $this->belongsToMany(ClassGroup::class, 'class_group_students', 'user_id', 'class_group_id')
-            ->withTimestamps();
-    }
+public function classGroup()
+{
+    return $this->belongsTo(ClassGroup::class);
+}
 
     public function enrollments()
     {
