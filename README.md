@@ -114,3 +114,11 @@ MAIL_ENCRYPTION=null
 * Class Groups
 * Notifications System
 * Email system (Mailtrap)
+  
+---  
+
+  # 🗄️ Database Design (ERD)
+
+The following diagram represents the database structure and relationships used in the project.
+
+![ERD Diagram](zayd.drawio.png)
