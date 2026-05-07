@@ -355,11 +355,11 @@
                                     @if($teacher->social)
 
                                     {{-- زر تعديل --}}
-                                    <a href="{{ route('teacher.social.edit', $teacher->id) }}"
+                                    {{-- <a href="{{ route('teacher.social.edit', $teacher->id) }}"
                                         class="btn btn-warning text-center mr-2 px-0"
                                         style="width:38px;height:38px">
                                         <i class="fas fa-edit"></i>
-                                    </a>
+                                    </a> --}}
 
                                     {{-- زر حذف --}}
                                     <form action="{{ route('teacher.social.destroy', $teacher->id) }}"

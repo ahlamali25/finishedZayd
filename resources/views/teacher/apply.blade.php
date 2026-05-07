@@ -96,8 +96,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between">
-                                            <button type="button" class="btn btn-light btn-modern btn-prev">←
-                                                السابق</button>
+                                            
                                             <button type="submit" class="btn btn-success btn-modern">إرسال الطلب ✓</button>
                                         </div>
                                     </div>
